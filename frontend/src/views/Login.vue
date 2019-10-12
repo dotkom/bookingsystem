@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <img src="../assets/OWF-badge.png" /> 
     <Login />
   </div>
 </template>
