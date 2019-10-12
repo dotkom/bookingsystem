@@ -1,27 +1,24 @@
-import { PoolConfig, ClientConfig } from 'pg';
+import { PoolConfig, ClientConfig } from "pg";
 
-const { Pool } = require('pg');
-require('dotenv').config();
+const { Pool } = require("pg");
+require("dotenv").config();
 
 const pgconfig: PoolConfig = {
   user: process.env.DBUSER,
   database: process.env.DATABASENAME,
   password: process.env.DBPASSWORD,
   host: process.env.DBHOST,
-  port: parseInt(process.env.DBPORT),
+  port: parseInt(process.env.DBPORT)
 };
 
 const pool = new Pool(pgconfig);
 
-pool.on('error', (err: Error, client: ClientConfig) => {
+pool.on("error", (err: Error, client: ClientConfig) => {
   console.error(err, client);
 });
 export const createTable = async (sqlStatement: string) => {
-  if (
-    sqlStatement &&
-    !sqlStatement.toLowerCase().includes('create table')
-  ) {
-    throw new Error('wrong type of SQL statement');
+  if (sqlStatement && !sqlStatement.toLowerCase().includes("create table")) {
+    throw new Error("wrong type of SQL statement");
   }
   let client;
   try {
@@ -37,12 +34,9 @@ export const createTable = async (sqlStatement: string) => {
   }
 };
 
-export const insertSingleRow = async (
-  sqlStatement: string,
-  data: string[],
-) => {
-  if (!sqlStatement.toLowerCase().includes('insert into')) {
-    throw new Error('wrong type of SQL statement');
+export const insertSingleRow = async (sqlStatement: string, data: string[]) => {
+  if (!sqlStatement.toLowerCase().includes("insert into")) {
+    throw new Error("wrong type of SQL statement");
   }
   let client;
   try {
@@ -58,12 +52,9 @@ export const insertSingleRow = async (
   }
 };
 
-export const getRows = async (
-  sqlStatement: string,
-  data: string[] = [],
-) => {
-  if (!sqlStatement.toLowerCase().includes('select')) {
-    throw new Error('wrong type of SQL statement');
+export const getRows = async (sqlStatement: string, data: string[] = []) => {
+  if (!sqlStatement.toLowerCase().includes("select")) {
+    throw new Error("wrong type of SQL statement");
   }
   let client;
   try {
