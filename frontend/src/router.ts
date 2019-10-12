@@ -5,8 +5,6 @@ import Calendar from './views/Calendar.vue'
 import Login from './views/Login.vue'
 import Home from './views/Home.vue'
 import store from './store'
-
-
 store.commit('initialiseStore')
 
 Vue.use(Router)

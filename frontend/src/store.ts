@@ -10,7 +10,6 @@ export default new Vuex.Store({
       state.login = status
     },
     initialiseStore (state) {
-      // Check if the ID exists
       if (localStorage.getItem('store')) {
         this.replaceState(
           Object.assign(state, JSON.parse(localStorage.getItem('store') as string))

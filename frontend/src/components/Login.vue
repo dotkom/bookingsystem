@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <input v-model="accesstoken" type="text" placeholder="input token"/>
-    <button @click="login"> Access bookingsystem </button>
+    <span>
+    <label for="company code">{{label}} </label>
+    <input v-model="accesstoken" type="text" name="company code"/>
+   <p> {{hint}} </p>
+    </span>
+    <button @click="login"> Forsett til booking </button>
   </div>
 </template>
 
@@ -10,7 +14,11 @@ import { AxiosResponse } from "axios";
 
 export default {
           data() {
-       return { accesstoken: ""};
+       return {
+         accesstoken: "",
+         hint: "Hint: Tast inn koden du har fått tilsendt på mail",
+         label:"Bedrifts kode"
+       };
      },
   methods: {
     login() {
@@ -31,4 +39,15 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+#app * {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+
+span p{
+  font-size: 6px;
+}
+</style>

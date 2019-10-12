@@ -14,8 +14,6 @@ export default {
               type: "attemptLogin",
               status: false
             });
-            console.log(localStorage.getItem('store') as string)
-            console.log(this.$store)
             this.$router.push('/login')
     }
   }

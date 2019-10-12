@@ -8,11 +8,11 @@ import store from './store'
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 
-
-
 store.subscribe((mutation, state) => {
   localStorage.setItem('store', JSON.stringify(state))
 })
+
+
 
 new Vue({
   render: (h) => h(App),
