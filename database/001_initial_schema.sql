@@ -1,1 +1,3 @@
-CREATE TABLE IF NOT EXISTS public.User(id Numeric PRIMARY KEY, firstName text,lastName text,age int);
+CREATE TABLE
+IF NOT EXISTS public.keys
+(accesstoken text UNIQUE)
