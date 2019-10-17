@@ -1,19 +1,30 @@
-import {createTable} from './databasefunctions'
-import express = require('express');
+  
+import { insertSingleRow,getRows } from "./databasefunctions"
+import express = require("express")
+import { QueryResultRow } from "pg"
+import cors from "cors"
+import formidable from "express-formidable"
 
-
-// lib/app.ts
 
 
 // Create a new express application instance
-const app: express.Application = express();
+const app: express.Application = express()
+app.use(formidable())
+app.use("*", cors())
 
-app.get('/', (req, res) => {
-  console.log('lol')
-  createTable('CREATE TABLE if not exists account(user_id serial PRIMARY KEY,username VARCHAR (50) UNIQUE NOT NULL,password VARCHAR (50) NOT NULL,email VARCHAR (355) UNIQUE NOT NULL,created_on TIMESTAMP NOT NULL,last_login TIMESTAMP);')
-  res.status(400).send(null)
-});
+app.post("/accesstoken/new", (req, res) => {
+  const values = req.fields // This is a string[]
+  insertSingleRow("insert into keys (accesstoken) VALUES ($1) on conflict do nothing", [values[0] as string])
+  res.status(200).send({ status: "success" })
+})
+
+app.post("/company/login", async (req, res) => {
+  const values = req.fields
+  const query: QueryResultRow = await getRows("select * from keys where accesstoken = $1",[values[0] as string])
+  const data: boolean = query.rows[0] && query.rows.length !== 0 ? true : false
+  res.status(200).send(data)
+})
 
 app.listen(3000, () =>  {
-  console.log('Example app listening on port 3000!');
-});
+  console.log("Example app listening on port 3000!")
+})
