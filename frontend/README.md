@@ -4,6 +4,7 @@
 ```
 npm install
 ```
+Open project as workspace. Choose the bookingsystem.code-workspace file.
 
 ### Compiles and hot-reloads for development
 ```
