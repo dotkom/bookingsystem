@@ -15,7 +15,7 @@ const pool = new pg.Pool(pgconfig)
 
 
 pool.on("error", (err: Error,client: pg.PoolClient) => {
-  console.error(err,client)
+    console.error(err,client)
 })
 
 
