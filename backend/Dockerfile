@@ -23,4 +23,4 @@ COPY tsconfig.json .
 RUN npm run build
 
 
-CMD [ "node", "build/boot.js" ]
+CMD [ "node", "build/server.js" ]
