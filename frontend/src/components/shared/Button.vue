@@ -38,5 +38,6 @@ button {
   letter-spacing: 1px;
   display: flex;
   margin: auto;
+  cursor: pointer;
 }
 </style>

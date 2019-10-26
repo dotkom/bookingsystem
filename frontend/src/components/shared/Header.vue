@@ -18,6 +18,7 @@ export default {};
   -moz-box-pack: center;
   justify-content: center;
   box-sizing: border-box;
+  color: white;
 }
 img {
   width: 26rem;
