@@ -1,26 +1,31 @@
 <template>
   <div class="main">
     <label for="text-input"> {{ labelText }} </label>
-    <input type="text" name="text-input" @input="emitInputText" :placeholder="placeholderText" />
+    <input
+      type="text"
+      name="text-input"
+      @input="emitInputText"
+      :placeholder="placeholderText"
+    />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
-  name: "TextInput",
+  name: "TextInput" as string,
   props: {
     labelText: String,
     placeholderText: String
   },
   methods: {
-    emitInputText(event) {
-      this.$emit("emitInputText", event.target.value);
+    emitInputText(event: String) {
+      this.$emit("emitInputText", event);
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .main {
   display: flex;
   flex-flow: column nowrap;
