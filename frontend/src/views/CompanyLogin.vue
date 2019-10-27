@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TextInput from "@/components/shared/TextInput.vue";
 import Header from "@/components/shared/Header.vue";
 import Button from "@/components/shared/Button.vue";
@@ -33,8 +33,11 @@ export default {
     Button
   },
   methods: {
-    updateAdmissionCode(event) {
-      this.$store.dispatch("SET_ADMISSION_CODE", event.target.value);
+    updateAdmissionCode(event: any) {
+      this.$store.dispatch(
+        "SET_ADMISSION_CODE",
+        (event.target as HTMLInputElement).value as string
+      );
     },
     btnClicked() {
       //button was clicked, do something

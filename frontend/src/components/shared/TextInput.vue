@@ -18,7 +18,7 @@ export default {
     placeholderText: String
   },
   methods: {
-    emitInputText(event: String) {
+    emitInputText(event: HTMLInputElement) {
       this.$emit("emitInputText", event);
     }
   }
