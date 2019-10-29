@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="header">
+    <header>
       <img src="@/assets/online.png" />
       <h2>Bookingsystem</h2>
     </header>
@@ -12,18 +12,6 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-.header {
-  background-color: rgb(0, 96, 163);
-  display: grid;
-  -moz-box-pack: center;
-  justify-content: center;
-  box-sizing: border-box;
-  color: white;
-}
-img {
-  width: 26rem;
-  max-width: 100vw;
-  box-sizing: border-box;
-  padding: 1.5rem;
-}
+@import "@/sass/shared-mixins.scss";
+@include header;
 </style>
