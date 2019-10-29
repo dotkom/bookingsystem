@@ -2,13 +2,26 @@
 
 ## Project setup
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 65bdf9e04cfce04517cfec5c7add47d387816894
+
 ```
 npm install
 ```
 
+<<<<<<< HEAD
 Open project as workspace. Choose the bookingsystem.code-workspace file.
 
 ### Compiles and hot-reloads for development
+
+=======
+
+### Compiles and hot-reloads for development
+
+> > > > > > > 65bdf9e04cfce04517cfec5c7add47d387816894
 
 ```
 npm run serve
