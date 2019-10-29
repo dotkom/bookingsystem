@@ -9,7 +9,7 @@ const app: express.Application = express();
 app.use(formidableMiddleware());
 app.use('*', cors());
 
-app.post('/accesstoken/new', (req, res) => {
+app.post('/accesstoken', (req, res) => {
   const values = req.fields; // This is a string[]
   insertSingleRow(
     'insert into keys (accesstoken) VALUES ($1) on conflict do nothing',
