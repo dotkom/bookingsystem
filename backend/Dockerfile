@@ -1,5 +1,5 @@
 # --- Installing stage
-FROM node:11.4 AS installer
+FROM node:alpine AS installer
 
 WORKDIR /usr/src/app
 
