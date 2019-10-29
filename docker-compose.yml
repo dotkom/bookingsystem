@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   backend:
     container_name: bookingsystem_backend
@@ -16,17 +16,17 @@ services:
     networks:
       - backend
   db:
-      container_name: bookingsystem_db
-      build: ./database
-      ports:
-        - "5018:5432"
-      healthcheck:
-          test: ["CMD", "curl", "-f", "http://localhost:5018"]
-          interval: 30s
-          timeout: 10s
-          retries: 5
-      networks:
-        - backend
+    container_name: bookingsystem_db
+    build: ./database
+    ports:
+      - "5018:5432"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5018"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend
 networks:
   backend:
     driver: "bridge"

@@ -1,7 +1,9 @@
-import * as pg from 'pg';
+import { PoolConfig, ClientConfig } from 'pg';
+
+const { Pool } = require('pg');
 require('dotenv').config();
 
-const pgconfig: pg.PoolConfig = {
+const pgconfig: PoolConfig = {
   user: process.env.DBUSER,
   database: process.env.DATABASENAME,
   password: process.env.DBPASSWORD,
@@ -9,12 +11,11 @@ const pgconfig: pg.PoolConfig = {
   port: parseInt(process.env.DBPORT),
 };
 
-const pool = new pg.Pool(pgconfig);
+const pool = new Pool(pgconfig);
 
-pool.on('error', (err: Error, client: pg.PoolClient) => {
+pool.on('error', (err: Error, client: ClientConfig) => {
   console.error(err, client);
 });
-
 export const createTable = async (sqlStatement: string) => {
   if (
     sqlStatement &&
