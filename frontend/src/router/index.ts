@@ -1,27 +1,48 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import Router, { Route } from "vue-router";
+import About from "../views/About.vue";
+import Calendar from "../views/Calendar.vue";
+import Login from "../views/Login.vue";
+import Home from "../views/Home.vue";
+import store from "../store";
 
-Vue.use(VueRouter)
+store.commit("initialiseStore");
+Vue.use(Router);
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+const auth = (_to: Route, _from: Route, next: Function) => {
+  if (store.getters.isAuthenticated.status) next("/calendar");
+  else next();
+};
 
-const router = new VueRouter({
-  routes
-})
+const notAuth = (_to: Route, _from: Route, next: Function) => {
+  if (!store.getters.isAuthenticated.status) next("/login");
+  else next();
+};
 
-export default router
+export default new Router({
+  mode: "history",
+  routes: [
+    {
+      component: Home,
+      name: "home",
+      path: "/"
+    },
+    {
+      component: About,
+      name: "about",
+      path: "/about"
+    },
+    {
+      component: Calendar,
+      name: "calendar",
+      path: "/calendar",
+      beforeEnter: notAuth
+    },
+    {
+      component: Login,
+      name: "login",
+      path: "/login",
+      beforeEnter: auth
+    }
+  ]
+});
