@@ -1,32 +1,17 @@
 <template>
-  <div>
-    <RangePickerView />
+  <div id="app">
+    <router-view></router-view>
   </div>
 </template>
 
-<script>
-import RangePickerView from "@/views/bedkom/RangePickerView";
-
-export default {
-  components: {
-    RangePickerView
-  }
-};
-
-// @ is an alias to /src
+<script lang="ts">
+import Vue from "vue";
+export default Vue.extend({
+  name: "App"
+});
 </script>
 
 <style lang="scss">
-body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-}
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+@import "@/sass/layout.scss";
+@include layout;
 </style>

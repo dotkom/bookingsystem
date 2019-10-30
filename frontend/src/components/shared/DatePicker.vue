@@ -12,6 +12,11 @@
       :minDate="getCurrentDate"
       :initial-value="getCurrentDate"
       locale="en"
+      :noClearButton="true"
+      :autoClose="true"
+      :noWeekendDays="true"
+      :firstDayOfWeek="1"
+      :noHeader="true"
     />
   </div>
 </template>
