@@ -1,37 +1,30 @@
+/* eslint-disable no-console */
 import Vue from "vue";
 import Router, { Route } from "vue-router";
-import About from "../views/About.vue";
 import Calendar from "../views/Calendar.vue";
-import Login from "../views/Login.vue";
-import Home from "../views/Home.vue";
 import store from "../store";
+import CompanyLogin from "../views/CompanyLogin.vue";
 
 store.commit("initialiseStore");
 Vue.use(Router);
 
 const auth = (_to: Route, _from: Route, next: Function) => {
-  if (store.getters.isAuthenticated.status) next("/calendar");
-  else next();
+  if (store.getters.isAuthenticated.status) {
+    console.log("going to calendar");
+    next("/calendar");
+  } else next();
 };
 
 const notAuth = (_to: Route, _from: Route, next: Function) => {
-  if (!store.getters.isAuthenticated.status) next("/login");
-  else next();
+  if (!store.getters.isAuthenticated.status) {
+    console.log("going to login");
+    next("/login");
+  } else next();
 };
 
 export default new Router({
   mode: "history",
   routes: [
-    {
-      component: Home,
-      name: "home",
-      path: "/"
-    },
-    {
-      component: About,
-      name: "about",
-      path: "/about"
-    },
     {
       component: Calendar,
       name: "calendar",
@@ -39,9 +32,9 @@ export default new Router({
       beforeEnter: notAuth
     },
     {
-      component: Login,
-      name: "login",
       path: "/login",
+      name: "companyLogin",
+      component: CompanyLogin,
       beforeEnter: auth
     }
   ]

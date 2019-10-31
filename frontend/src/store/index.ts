@@ -4,8 +4,18 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  actions: {},
+  state: {
+    admissionCode: "" as string,
+    login: false
+  },
+  getters: {
+    admissionCode: state => state.admissionCode,
+    isAuthenticated: state => state.login
+  },
   mutations: {
+    SET_ADMISSION_CODE(state, payload) {
+      state.admissionCode = payload;
+    },
     attemptLogin(state, status: boolean) {
       state.login = status;
     },
@@ -20,10 +30,9 @@ export default new Vuex.Store({
       }
     }
   },
-  state: {
-    login: false
-  },
-  getters: {
-    isAuthenticated: state => state.login
+  actions: {
+    SET_ADMISSION_CODE: (context, payload) => {
+      context.commit("SET_ADMISSION_CODE", payload);
+    }
   }
 });
