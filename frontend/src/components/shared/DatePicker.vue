@@ -9,14 +9,16 @@
       :noButtonNow="true"
       :label="labelText"
       :overlay="true"
-      :minDate="getCurrentDate"
-      :initial-value="getCurrentDate"
+      :minDate="startDate"
+      :initial-value="startDate"
       locale="en"
       :noClearButton="true"
       :autoClose="true"
       :noWeekendDays="true"
       :firstDayOfWeek="1"
       :noHeader="true"
+      :disabled="enabled"
+      outputFormat="YYYY-MM-DD"
     />
   </div>
 </template>
@@ -31,20 +33,14 @@ export default {
     VueCtkDateTimePicker
   },
   props: {
-    labelText: String
+    labelText: String,
+    enabled: Boolean,
+    startDate: String
   },
   data() {
     return {
       chosenDate: ""
     };
-  },
-  computed: {
-    getCurrentDate() {
-      const year = String(new Date().getFullYear());
-      const month = String(new Date().getMonth() + 1);
-      const day = String(new Date().getDate());
-      return year + "-" + month + "-" + day;
-    }
   },
   watch: {
     chosenDate: function() {

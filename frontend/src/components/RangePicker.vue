@@ -9,14 +9,53 @@
         @emitInputText="updateSeasonName"
       />
     </div>
-    <h2>Select the seasons start and end dates</h2>
+    <h2>Select the dates for each bolk</h2>
+    <h4>Bolk 1</h4>
     <div class="__content">
       <DatePicker
         class="__dp_1"
-        labelText="Pick start date"
-        @datePicked="updateStartDate"
+        labelText="Pick bolk 1 start date"
+        @datePicked="updateBolk1StartDate"
+        :startDate="getCurrentDate"
       />
-      <DatePicker labelText="Pick end date" @datePicked="updateEndDate" />
+      <DatePicker
+        labelText="Pick bolk 1 end date"
+        @datePicked="updateBolk1EndDate"
+        :enabled="bolk1EndDisabled"
+        :startDate="getBolk1Start"
+      />
+    </div>
+    <h4>Bolk 2</h4>
+    <div class="__content">
+      <DatePicker
+        class="__dp_1"
+        labelText="Pick bolk 2 start date"
+        @datePicked="updateBolk2StartDate"
+        :enabled="bolk2StartDisabled"
+        :startDate="getBolk1End"
+      />
+      <DatePicker
+        labelText="Pick bolk 2 end date"
+        @datePicked="updateBolk2EndDate"
+        :enabled="bolk2EndDisabled"
+        :startDate="getBolk2Start"
+      />
+    </div>
+    <h4>Bolk 3</h4>
+    <div class="__content">
+      <DatePicker
+        class="__dp_1"
+        labelText="Pick bolk 3 start date"
+        @datePicked="updateBolk3StartDate"
+        :enabled="bolk3StartDisabled"
+        :startDate="getBolk2End"
+      />
+      <DatePicker
+        labelText="Pick bolk 3 end date"
+        @datePicked="updateBolk3EndDate"
+        :enabled="bolk3EndDisabled"
+        :startDate="getBolk3Start"
+      />
     </div>
     <Button btnText="Next step" @btnClicked="nextPage" />
   </div>
@@ -36,25 +75,68 @@ export default Vue.extend({
     Button,
     TextInput
   },
+  data() {
+    return {
+      bolk1EndDisabled: true,
+      bolk2StartDisabled: true,
+      bolk2EndDisabled: true,
+      bolk3StartDisabled: true,
+      bolk3EndDisabled: true
+    };
+  },
   methods: {
-    updateStartDate(chosenDate: string) {
-      // eslint-disable-next-line no-console
-      console.log(chosenDate);
-      this.$store.dispatch("SET_START_DATE", chosenDate);
+    updateBolk1StartDate(chosenDate: string) {
+      this.bolk1EndDisabled = false;
+      this.$store.dispatch("SET_BOLK_1_START_DATE", chosenDate as string);
     },
-    updateEndDate(chosenDate: string) {
-      // eslint-disable-next-line no-console
-      console.log(chosenDate);
-      this.$store.dispatch("SET_END_DATE", chosenDate);
+    updateBolk1EndDate(chosenDate: string) {
+      this.bolk2StartDisabled = false;
+      this.$store.dispatch("SET_BOLK_1_END_DATE", chosenDate as string);
+    },
+    updateBolk2StartDate(chosenDate: string) {
+      this.bolk2EndDisabled = false;
+      this.$store.dispatch("SET_BOLK_2_START_DATE", chosenDate as string);
+    },
+    updateBolk2EndDate(chosenDate: string) {
+      this.bolk3StartDisabled = false;
+      this.$store.dispatch("SET_BOLK_2_END_DATE", chosenDate as string);
+    },
+    updateBolk3StartDate(chosenDate: string) {
+      this.bolk3EndDisabled = false;
+      this.$store.dispatch("SET_BOLK_3_START_DATE", chosenDate as string);
+    },
+    updateBolk3EndDate(chosenDate: string) {
+      this.$store.dispatch("SET_BOLK_3_END_DATE", chosenDate as string);
     },
     updateSeasonName(event: any) {
       this.$store.dispatch("SET_SEASON_NAME", (event.target as HTMLInputElement)
         .value as string);
     },
     nextPage() {
-      // eslint-disable-next-line no-console
-      console.log("yee");
       this.$store.dispatch("SET_STEP_INCREMENT");
+    }
+  },
+  computed: {
+    getCurrentDate() {
+      const year = String(new Date().getFullYear());
+      const month = String(new Date().getMonth() + 1);
+      const day = String(new Date().getDate());
+      return year + "-" + month + "-" + day;
+    },
+    getBolk1Start() {
+      return this.$store.getters.bolk1StartDate;
+    },
+    getBolk1End() {
+      return this.$store.getters.bolk1EndDate;
+    },
+    getBolk2Start() {
+      return this.$store.getters.bolk2StartDate;
+    },
+    getBolk2End() {
+      return this.$store.getters.bolk2EndDate;
+    },
+    getBolk3Start() {
+      return this.$store.getters.bolk3StartDate;
     }
   }
 });
