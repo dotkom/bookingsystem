@@ -7,12 +7,14 @@ export default new Vuex.Store({
   state: {
     admissionCode: "" as string,
     startDate: "" as string,
-    endDate: "" as string
+    endDate: "" as string,
+    seasonName: "" as string
   },
   getters: {
     admissionCode: state => state.admissionCode,
     startDate: state => state.startDate,
-    endDate: state => state.endDate
+    endDate: state => state.endDate,
+    seasonName: state => state.seasonName
   },
   mutations: {
     SET_ADMISSION_CODE(state, payload) {
@@ -23,6 +25,9 @@ export default new Vuex.Store({
     },
     SET_END_DATE(state, payload) {
       state.endDate = payload;
+    },
+    SET_SEASON_NAME(state, payload) {
+      state.seasonName = payload;
     }
   },
   actions: {
@@ -34,6 +39,9 @@ export default new Vuex.Store({
     },
     SET_END_DATE: (context, payload) => {
       context.commit("SET_END_DATE", payload);
+    },
+    SET_SEASON_NAME: (context, payload) => {
+      context.commit("SET_SEASON_NAME", payload);
     }
   }
 });
