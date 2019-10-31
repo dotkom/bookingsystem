@@ -1,15 +1,15 @@
 <template>
   <div>
-    <RangePickerView />
+    <RangePicker />
   </div>
 </template>
 
 <script>
-import RangePickerView from "@/components/RangePickerView.vue";
+import RangePicker from "@/components/RangePicker.vue";
 
 export default {
   components: {
-    RangePickerView
+    RangePicker
   }
 };
 </script>
