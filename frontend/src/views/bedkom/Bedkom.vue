@@ -4,7 +4,7 @@
       <RangePicker />
     </div>
     <div v-if="getStep == 2">
-      Hee
+      <Calendar />
     </div>
   </div>
 </template>
@@ -14,10 +14,12 @@
 
 import Vue from "vue";
 import RangePicker from "@/components/RangePicker.vue";
+import Calendar from "@/components/Calendar.vue";
 
 export default Vue.extend({
   components: {
-    RangePicker
+    RangePicker,
+    Calendar
   },
   computed: {
     getStep() {

@@ -88,7 +88,7 @@ export default Vue.extend({
       bolk2EndDisabled: true,
       bolk3StartDisabled: true,
       bolk3EndDisabled: true,
-      stepDisabled: true
+      stepDisabled: false
     };
   },
   methods: {
