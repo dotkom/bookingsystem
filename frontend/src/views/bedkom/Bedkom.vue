@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import RangePickerView from "@/views/bedkom/RangePickerView.vue";
+import RangePickerView from "@/components/RangePickerView.vue";
 
 export default {
   components: {
