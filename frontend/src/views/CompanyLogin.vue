@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import TextInput from "@/components/shared/TextInput.vue";
 import Header from "@/components/shared/Header.vue";
 import Button from "@/components/shared/Button.vue";
-
-export default {
+export default Vue.extend({
   components: {
     TextInput,
     Header,
@@ -43,7 +43,7 @@ export default {
       //button was clicked, do something
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
