@@ -54,6 +54,7 @@ export default Vue.extend({
     nextPage() {
       // eslint-disable-next-line no-console
       console.log("yee");
+      this.$store.dispatch("SET_STEP_INCREMENT");
     }
   }
 });

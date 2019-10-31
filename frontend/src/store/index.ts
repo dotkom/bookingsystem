@@ -8,13 +8,15 @@ export default new Vuex.Store({
     admissionCode: "" as string,
     startDate: "" as string,
     endDate: "" as string,
-    seasonName: "" as string
+    seasonName: "" as string,
+    step: 1 as number
   },
   getters: {
     admissionCode: state => state.admissionCode,
     startDate: state => state.startDate,
     endDate: state => state.endDate,
-    seasonName: state => state.seasonName
+    seasonName: state => state.seasonName,
+    step: state => state.step
   },
   mutations: {
     SET_ADMISSION_CODE(state, payload) {
@@ -28,6 +30,12 @@ export default new Vuex.Store({
     },
     SET_SEASON_NAME(state, payload) {
       state.seasonName = payload;
+    },
+    SET_STEP_INCREMENT(state) {
+      state.step++;
+    },
+    SET_STEP_DECREMENT(state) {
+      state.step--;
     }
   },
   actions: {
@@ -42,6 +50,12 @@ export default new Vuex.Store({
     },
     SET_SEASON_NAME: (context, payload) => {
       context.commit("SET_SEASON_NAME", payload);
+    },
+    SET_STEP_INCREMENT: context => {
+      context.commit("SET_STEP_INCREMENT");
+    },
+    SET_STEP_DECREMENT: context => {
+      context.commit("SET_STEP_DECREMENT");
     }
   }
 });
