@@ -57,7 +57,13 @@
         :startDate="getBolk3Start"
       />
     </div>
-    <Button btnText="Next step" @btnClicked="nextPage" />
+    <div>
+      <Button
+        btnText="Next step"
+        @btnClicked="nextPage"
+        :disabled="stepDisabled"
+      />
+    </div>
   </div>
 </template>
 
@@ -81,7 +87,8 @@ export default Vue.extend({
       bolk2StartDisabled: true,
       bolk2EndDisabled: true,
       bolk3StartDisabled: true,
-      bolk3EndDisabled: true
+      bolk3EndDisabled: true,
+      stepDisabled: true
     };
   },
   methods: {
@@ -107,6 +114,7 @@ export default Vue.extend({
     },
     updateBolk3EndDate(chosenDate: string) {
       this.$store.dispatch("SET_BOLK_3_END_DATE", chosenDate as string);
+      this.stepDisabled = false;
     },
     updateSeasonName(event: any) {
       this.$store.dispatch("SET_SEASON_NAME", (event.target as HTMLInputElement)

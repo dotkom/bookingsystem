@@ -1,6 +1,6 @@
 <template>
   <div class="btnDiv">
-    <button @click="btnClick">
+    <button @click="btnClick" :disabled="disabled">
       {{ btnText }}
     </button>
   </div>
@@ -11,7 +11,8 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Button" as string,
   props: {
-    btnText: String
+    btnText: String,
+    disabled: Boolean
   },
   methods: {
     btnClick() {

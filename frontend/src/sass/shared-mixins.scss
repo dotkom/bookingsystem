@@ -63,5 +63,13 @@
     display: flex;
     margin: auto;
     cursor: pointer;
+    
+    &:disabled{
+      background:rgb(242, 242, 242) none repeat scroll 0% 0%;
+      color:rgb(204, 204, 204);
+      box-shadow: none;
+      border-color:rgb(242, 242, 242);
+      cursor: not-allowed;
+    }
   }
 }
