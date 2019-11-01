@@ -1,24 +1,25 @@
 <template>
   <div class="btnDiv">
-    <button @click="btnClick">
-      {{ btnText }}
-    </button>
+    <button @click="btnClick">{{ btnText }}</button>
   </div>
 </template>
 
+
 <script lang="ts">
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "Button" as string,
   props: {
     btnText: String
   },
   methods: {
     btnClick() {
-      this.$emit("btnClicked",'bekk');
+      this.$emit("btnClicked");
     }
   }
-};
+});
 </script>
+
 
 <style lang="scss" scoped>
 @import "@/sass/shared-mixins.scss";

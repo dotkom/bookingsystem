@@ -6,7 +6,8 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+export default Vue.extend({
   components: {},
   methods: {
     logout() {
@@ -17,5 +18,8 @@ export default {
       this.$router.push("/login");
     }
   }
-};
+});
 </script>
+
+
+
