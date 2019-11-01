@@ -1,22 +1,22 @@
 <template>
-  <div>
+  <div class="content">
     <h1>Bolk1</h1>
     <div v-for="day in bolk1" :key="day.id">
       <div>
-        {{ day }}
+        {{ day.id }}
       </div>
     </div>
     <h1>Bolk2</h1>
     <div v-for="day in bolk2" :key="day.id">
       <div>
-        {{ day }}
+        {{ day.id }}
       </div>
     </div>
 
     <h1>Bolk3</h1>
     <div v-for="day in bolk3" :key="day.id">
       <div>
-        {{ day }}
+        {{ day.id }}
       </div>
     </div>
   </div>
@@ -31,6 +31,7 @@ import moment from "moment";
 export default Vue.extend({
   data() {
     return {
+      yearArray: new Array(12).fill(null) as any,
       bolk1: [] as any,
       bolk2: [] as any,
       bolk3: [] as any
@@ -47,39 +48,60 @@ export default Vue.extend({
       const startBolk3 = new Date(this.getBolk3Start);
       const endBolk3 = new Date(this.getBolk3End);
 
-      for (let index = 0; index < this.getOffset(this.getBolk1Start); index++) {
-        this.bolk1.push({
-          id: "OffsetBolk1" + `${index}`,
-          name: "Offset"
-        });
-      }
+      // for (let index = 0; index < this.getOffset(this.getBolk1Start); index++) {
+      //   this.bolk1.push({
+      //     id: "OffsetBolk1" + `${index}`,
+      //     name: "Offset",
+      //     value: false
+      //   });
+      // }
 
-      for (let index = 0; index < this.getOffset(this.getBolk2Start); index++) {
-        this.bolk2.push({
-          id: "OffsetBolk2" + `${index}`,
-          name: "Offset"
-        });
-      }
+      // for (let index = 0; index < this.getOffset(this.getBolk2Start); index++) {
+      //   this.bolk2.push({
+      //     id: "OffsetBolk2" + `${index}`,
+      //     name: "Offset",
+      //     value: false
+      //   });
+      // }
 
-      for (let index = 0; index < this.getOffset(this.getBolk3Start); index++) {
-        this.bolk3.push({
-          id: "OffsetBolk3" + `${index}`,
-          name: "Offset"
-        });
-      }
+      // for (let index = 0; index < this.getOffset(this.getBolk3Start); index++) {
+      //   this.bolk3.push({
+      //     id: "OffsetBolk3" + `${index}`,
+      //     name: "Offset",
+      //     value: false
+      //   });
+      // }
 
       this.getAllDates(this.bolk1, startBolk1, endBolk1);
       this.getAllDates(this.bolk2, startBolk2, endBolk2);
       this.getAllDates(this.bolk3, startBolk3, endBolk3);
+      this.initYear(this.bolk1, 0);
+      this.initYear(this.bolk2, 1);
+      this.initYear(this.bolk3, 2);
+    },
+    initYear(bolk: Array<moment.Moment>, nr: number) {
+      const mappedBolk = bolk.map(el => el.month());
+      console.log(mappedBolk);
+      let unique = [...new Set(mappedBolk)];
+      console.log(unique);
+
+      unique.forEach(element => {
+        if (!this.yearArray[element]) {
+          this.yearArray[element] = [[], [], []];
+        }
+      });
+      bolk.forEach(element => {
+        let localVal = element.month();
+        this.yearArray[localVal][nr].push(element);
+      });
+      console.log(this.yearArray);
     },
     getAllDates(bolk: Array<Object>, startDate: Date, endDate: Date) {
       let currentDate = moment(startDate);
       const stopDate = moment(endDate);
+
       while (currentDate <= stopDate) {
-        bolk.push({
-          id: moment(currentDate).format("YYYY-MM-DD"),
-          name: moment(currentDate).format("DD")
-        });
+        bolk.push(moment(currentDate));
         currentDate = moment(currentDate).add(1, "days");
       }
     },
@@ -141,4 +163,12 @@ export default Vue.extend({
 });
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+// .content {
+//   width: 100%;
+//   height: 100%;
+//   display: grid;
+//   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+//   grid-template-rows: 1fr 7fr 7fr 7fr 7fr 7fr;
+// }
+</style>
