@@ -1,23 +1,17 @@
 <template>
   <div class="content">
-    <h1>Bolk1</h1>
-    <div v-for="day in bolk1" :key="day.id">
-      <div>
-        {{ day.id }}
-      </div>
-    </div>
-    <h1>Bolk2</h1>
-    <div v-for="day in bolk2" :key="day.id">
-      <div>
-        {{ day.id }}
-      </div>
-    </div>
-
-    <h1>Bolk3</h1>
-    <div v-for="day in bolk3" :key="day.id">
-      <div>
-        {{ day.id }}
-      </div>
+    <div class="__months" v-for="month in yearArray" :key="month">
+      <div v-for="n in getOffset(month)" :key="n"></div>
+      <template v-for="(bolk, index) in month">
+        <button
+          v-for="day in bolk"
+          :key="String(day)"
+          :class="`Bolk${index}`"
+          :disabled="isWeekend(day)"
+        >
+          Button
+        </button>
+      </template>
     </div>
   </div>
 </template>
@@ -48,30 +42,6 @@ export default Vue.extend({
       const startBolk3 = new Date(this.getBolk3Start);
       const endBolk3 = new Date(this.getBolk3End);
 
-      // for (let index = 0; index < this.getOffset(this.getBolk1Start); index++) {
-      //   this.bolk1.push({
-      //     id: "OffsetBolk1" + `${index}`,
-      //     name: "Offset",
-      //     value: false
-      //   });
-      // }
-
-      // for (let index = 0; index < this.getOffset(this.getBolk2Start); index++) {
-      //   this.bolk2.push({
-      //     id: "OffsetBolk2" + `${index}`,
-      //     name: "Offset",
-      //     value: false
-      //   });
-      // }
-
-      // for (let index = 0; index < this.getOffset(this.getBolk3Start); index++) {
-      //   this.bolk3.push({
-      //     id: "OffsetBolk3" + `${index}`,
-      //     name: "Offset",
-      //     value: false
-      //   });
-      // }
-
       this.getAllDates(this.bolk1, startBolk1, endBolk1);
       this.getAllDates(this.bolk2, startBolk2, endBolk2);
       this.getAllDates(this.bolk3, startBolk3, endBolk3);
@@ -81,20 +51,19 @@ export default Vue.extend({
     },
     initYear(bolk: Array<moment.Moment>, nr: number) {
       const mappedBolk = bolk.map(el => el.month());
-      console.log(mappedBolk);
       let unique = [...new Set(mappedBolk)];
-      console.log(unique);
 
       unique.forEach(element => {
         if (!this.yearArray[element]) {
           this.yearArray[element] = [[], [], []];
         }
       });
+
       bolk.forEach(element => {
         let localVal = element.month();
         this.yearArray[localVal][nr].push(element);
       });
-      console.log(this.yearArray);
+      // console.log(this.yearArray)
     },
     getAllDates(bolk: Array<Object>, startDate: Date, endDate: Date) {
       let currentDate = moment(startDate);
@@ -105,35 +74,26 @@ export default Vue.extend({
         currentDate = moment(currentDate).add(1, "days");
       }
     },
-    getOffset(date: string) {
-      const dayOfWeek = new Date(date).getDay();
-      let weekDays = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      ];
-      const monthStartDay = isNaN(dayOfWeek) ? null : weekDays[dayOfWeek];
-      switch (monthStartDay) {
-        case "Monday":
-          return 0;
-        case "Tuesday":
-          return 1;
-        case "Wednesday":
-          return 2;
-        case "Thursday":
-          return 3;
-        case "Friday":
-          return 4;
-        case "Saturday":
-          return 5;
-        case "Sunday":
-          return 6;
-        default:
-          return 0;
+    getOffset(
+      monthBolkArray: [[moment.Moment], [moment.Moment], [moment.Moment]] | null
+    ): number {
+      if (!monthBolkArray) return 0;
+      const firstFilledBolk = monthBolkArray.find(
+        (entry: [] | [moment.Moment]): boolean => entry.length > 1
+      );
+      // console.log("firstbolk", firstFilledBolk);
+      const firstDay = firstFilledBolk && firstFilledBolk[0];
+      // console.log("firstday", firstDay);
+      if (!firstDay) return 0;
+      // console.log("firstdaymonth", firstDay.month());
+      const dayOfWeek = firstDay.startOf("month");
+      // console.log("dayofweek", dayOfWeek);
+      if (dayOfWeek.day() === 0) return 6;
+      return dayOfWeek.day() - 1;
+    },
+    isWeekend(day: moment.Moment) {
+      if (day.day() == 6 || day.day() == 0 || day.day() == 5) {
+        return true;
       }
     }
   },
@@ -157,18 +117,44 @@ export default Vue.extend({
       return this.$store.getters.bolk3EndDate;
     }
   },
-  mounted() {
+  created() {
     this.initBolks();
   }
 });
 </script>
 
 <style lang="scss" scoped>
-// .content {
-//   width: 100%;
-//   height: 100%;
-//   display: grid;
-//   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-//   grid-template-rows: 1fr 7fr 7fr 7fr 7fr 7fr;
-// }
+.__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.__months {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 7fr 7fr 7fr 7fr 7fr;
+}
+.Bolk {
+  &0 {
+    background-color: green;
+    &:disabled {
+      background-color: grey;
+    }
+  }
+  &1 {
+    background-color: yellow;
+    &:disabled {
+      background-color: grey;
+    }
+  }
+  &2 {
+    background-color: orange;
+    &:disabled {
+      background-color: grey;
+    }
+  }
+}
 </style>
