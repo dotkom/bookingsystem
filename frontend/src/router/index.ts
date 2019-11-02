@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import Vue from "vue";
 import Router, { Route } from "vue-router";
-import Calendar from "../views/Calendar.vue";
 import store from "../store";
-import CompanyLogin from "../views/CompanyLogin.vue";
 
 store.commit("initialiseStore");
 Vue.use(Router);
@@ -26,7 +24,7 @@ export default new Router({
   mode: "history",
   routes: [
     {
-      component: Calendar,
+      component: () => import("../views/Calendar.vue"),
       name: "calendar",
       path: "/calendar",
       beforeEnter: notAuth
@@ -34,13 +32,13 @@ export default new Router({
     {
       path: "/login",
       name: "companyLogin",
-      component: CompanyLogin,
+      component: () => import("../views/CompanyLogin.vue"),
       beforeEnter: auth
     },
     {
       path: "/",
       name: "Nan",
-      component: CompanyLogin,
+      component: () => import("../views/CompanyLogin.vue"),
       beforeEnter: auth
     }
   ]
