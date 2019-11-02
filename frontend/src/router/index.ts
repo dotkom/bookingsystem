@@ -36,6 +36,12 @@ export default new Router({
       name: "companyLogin",
       component: CompanyLogin,
       beforeEnter: auth
+    },
+    {
+      path: "/",
+      name: "Nan",
+      component: CompanyLogin,
+      beforeEnter: auth
     }
   ]
 });
