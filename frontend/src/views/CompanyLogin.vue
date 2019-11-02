@@ -2,7 +2,7 @@
   <div class="companyLogin">
     <Header />
     <div class="__content">
-      <h2>Fin overskrift</h2>
+      <h2>Fin tekst</h2>
       <p>
         Esse consectetur ipsum exercitation aliquip voluptate eiusmod esse
         pariatur aute. Esse consectetur ipsum exercitation aliquip voluptate
@@ -41,10 +41,8 @@ export default Vue.extend({
     },
     async btnClicked() {
       const value = [this.$store.getters.admissionCode];
-      const res = await this.$http.post(
-        "http://localhost:3000/company/login",
-        value
-      );
+      const URL = `http://${process.env.VUE_APP_BACKENDHOST}:${process.env.VUE_APP_BACKENDPORT}/company/login`;
+      const res = await this.$http.post(URL, value);
       if (res.data) {
         this.$store.commit({
           type: "attemptLogin",
