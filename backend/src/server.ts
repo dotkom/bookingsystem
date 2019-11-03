@@ -1,9 +1,13 @@
-import { insertSingleRow, getRows } from './databasefunctions';
-import express = require('express');
+import {
+  insertSingleRow,
+  getRows,
+  createTable,
+} from './databasefunctions';
+import express from 'express';
 import { QueryResultRow } from 'pg';
 import cors from 'cors';
-import formidableMiddleware = require('express-formidable');
-const { handleError } = require('./helpers/error');
+import formidableMiddleware from 'express-formidable';
+import { handleError } from './helpers/error';
 
 const app: express.Application = express();
 app.use(formidableMiddleware());
@@ -39,7 +43,7 @@ app.post('/company/login', async (req, res, next) => {
 
 app.get('/error', async (req, res, next) => {
   try {
-    await getRows('create table');
+    await createTable('create table');
   } catch (err) {
     next(err);
   }

@@ -1,4 +1,4 @@
-class ErrorHandler extends Error {
+export class ErrorHandler extends Error {
   statusCode: number;
   extra: object | string;
   constructor(
@@ -12,7 +12,7 @@ class ErrorHandler extends Error {
     this.extra = extra;
   }
 }
-const handleError = (err, res) => {
+export const handleError = (err, res) => {
   const { statusCode, message, extra } = err;
   res.status(statusCode).json({
     status: 'error',
@@ -20,8 +20,4 @@ const handleError = (err, res) => {
     message,
     extra,
   });
-};
-module.exports = {
-  ErrorHandler,
-  handleError,
 };
