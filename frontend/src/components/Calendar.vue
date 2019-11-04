@@ -1,16 +1,16 @@
 <template>
   <div class="content">
-    <div class="__months" v-for="month in yearArray" :key="month">
-      <div v-for="n in getOffset(month)" :key="n"></div>
+    <h2>Months</h2>
+    <div class="__months" v-for="(month, index) in yearArray" :key="index">
+      <p class="__name">{{ getNameOfMonth(month, index) }}</p>
+      <div v-for="n in getOffset(month)" :key="`${month}${n}n`"></div>
       <template v-for="(bolk, index) in month">
-        <button
-          v-for="day in bolk"
-          :key="String(day)"
-          :class="`Bolk${index}`"
-          :disabled="isWeekend(day)"
-        >
-          Button
-        </button>
+        <div v-for="day in bolk" :class="`Bolk${index}`" :key="`Bolk${day}`">
+          {{ day }}
+          <button :disabled="isWeekend(day)">
+            Button
+          </button>
+        </div>
       </template>
     </div>
   </div>
@@ -25,26 +25,27 @@ import moment from "moment";
 export default Vue.extend({
   data() {
     return {
-      yearArray: new Array(12).fill(null) as any,
-      bolk1: [] as any,
-      bolk2: [] as any,
-      bolk3: [] as any
+      yearArray: new Array(12).fill(null),
+      bolk1: [] as Array<moment.Moment>,
+      bolk2: [] as Array<moment.Moment>,
+      bolk3: [] as Array<moment.Moment>
     };
   },
   methods: {
     initBolks() {
-      const startBolk1 = new Date(this.getBolk1Start);
-      const endBolk1 = new Date(this.getBolk1End);
+      const startBolk1 = moment(this.getBolk1Start);
+      const endBolk1 = moment(this.getBolk1End);
 
-      const startBolk2 = new Date(this.getBolk2Start);
-      const endBolk2 = new Date(this.getBolk2End);
+      const startBolk2 = moment(this.getBolk2Start);
+      const endBolk2 = moment(this.getBolk2End);
 
-      const startBolk3 = new Date(this.getBolk3Start);
-      const endBolk3 = new Date(this.getBolk3End);
+      const startBolk3 = moment(this.getBolk3Start);
+      const endBolk3 = moment(this.getBolk3End);
 
-      this.getAllDates(this.bolk1, startBolk1, endBolk1);
-      this.getAllDates(this.bolk2, startBolk2, endBolk2);
-      this.getAllDates(this.bolk3, startBolk3, endBolk3);
+      this.bolk1 = this.getAllDates(startBolk1, endBolk1);
+      this.bolk2 = this.getAllDates(startBolk2, endBolk2);
+      this.bolk3 = this.getAllDates(startBolk3, endBolk3);
+
       this.initYear(this.bolk1, 0);
       this.initYear(this.bolk2, 1);
       this.initYear(this.bolk3, 2);
@@ -63,16 +64,20 @@ export default Vue.extend({
         let localVal = element.month();
         this.yearArray[localVal][nr].push(element);
       });
-      // console.log(this.yearArray)
+
+      this.methodThatForcesUpdate();
     },
-    getAllDates(bolk: Array<Object>, startDate: Date, endDate: Date) {
-      let currentDate = moment(startDate);
-      const stopDate = moment(endDate);
+    getAllDates(startDate: moment.Moment, endDate: moment.Moment) {
+      let localBolk = [];
+      let currentDate = startDate;
+      const stopDate = endDate;
 
       while (currentDate <= stopDate) {
-        bolk.push(moment(currentDate));
-        currentDate = moment(currentDate).add(1, "days");
+        localBolk.push(currentDate.clone());
+        currentDate = currentDate.clone();
+        currentDate.add(1, "d");
       }
+      return localBolk;
     },
     getOffset(
       monthBolkArray: [[moment.Moment], [moment.Moment], [moment.Moment]] | null
@@ -81,13 +86,9 @@ export default Vue.extend({
       const firstFilledBolk = monthBolkArray.find(
         (entry: [] | [moment.Moment]): boolean => entry.length > 1
       );
-      // console.log("firstbolk", firstFilledBolk);
       const firstDay = firstFilledBolk && firstFilledBolk[0];
-      // console.log("firstday", firstDay);
       if (!firstDay) return 0;
-      // console.log("firstdaymonth", firstDay.month());
-      const dayOfWeek = firstDay.startOf("month");
-      // console.log("dayofweek", dayOfWeek);
+      const dayOfWeek = firstDay.clone().startOf("month");
       if (dayOfWeek.day() === 0) return 6;
       return dayOfWeek.day() - 1;
     },
@@ -95,6 +96,14 @@ export default Vue.extend({
       if (day.day() == 6 || day.day() == 0 || day.day() == 5) {
         return true;
       }
+    },
+    getNameOfMonth(month: moment.Moment, index: number) {
+      if (month !== null) {
+        return moment(index + 1, "MM").format("MMMM");
+      }
+    },
+    methodThatForcesUpdate() {
+      this.$forceUpdate();
     }
   },
   computed: {
@@ -117,7 +126,7 @@ export default Vue.extend({
       return this.$store.getters.bolk3EndDate;
     }
   },
-  created() {
+  mounted() {
     this.initBolks();
   }
 });
@@ -135,25 +144,29 @@ export default Vue.extend({
 .__months {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 7fr 7fr 7fr 7fr 7fr;
-}
-.Bolk {
-  &0 {
-    background-color: green;
-    &:disabled {
-      background-color: grey;
-    }
+  grid-template-rows: 7fr 7fr 7fr 7fr 7fr 7fr;
+  .__name {
+    grid-column-start: 1;
+    grid-column-end: 8;
   }
-  &1 {
-    background-color: yellow;
-    &:disabled {
-      background-color: grey;
+  .Bolk {
+    &0 {
+      background-color: green;
+      &:disabled {
+        background-color: grey;
+      }
     }
-  }
-  &2 {
-    background-color: orange;
-    &:disabled {
-      background-color: grey;
+    &1 {
+      background-color: yellow;
+      &:disabled {
+        background-color: grey;
+      }
+    }
+    &2 {
+      background-color: orange;
+      &:disabled {
+        background-color: grey;
+      }
     }
   }
 }
