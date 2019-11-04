@@ -3,7 +3,8 @@
     <h2>Months</h2>
     <div class="__months" v-for="(month, index) in yearArray" :key="index">
       <p class="__name">{{ getNameOfMonth(month, index) }}</p>
-      <div v-for="n in getOffset(month)" :key="`${month}${n}n`"></div>
+      <div v-for="n in getOffset(month)" :key="`${month}${n}`"></div>
+      <div v-for="n in getUnselectedDays(month)" :key="n"></div>
       <template v-for="(bolk, index) in month">
         <div v-for="day in bolk" :class="`Bolk${index}`" :key="`Bolk${day}`">
           {{ day }}
@@ -91,6 +92,19 @@ export default Vue.extend({
       const dayOfWeek = firstDay.clone().startOf("month");
       if (dayOfWeek.day() === 0) return 6;
       return dayOfWeek.day() - 1;
+    },
+    getUnselectedDays(
+      monthBolkArray: [[moment.Moment], [moment.Moment], [moment.Moment]] | null
+    ): number {
+      if (!monthBolkArray) return 0;
+      const firstFilledBolk = monthBolkArray.find(
+        (entry: [] | [moment.Moment]): boolean => entry.length > 1
+      );
+      const firstDay = firstFilledBolk && firstFilledBolk[0];
+      if (!firstDay) return 0;
+      const localStat = [];
+      const dayOfWeek = firstDay.clone().startOf("month");
+      return firstDay.diff(dayOfWeek, "days");
     },
     isWeekend(day: moment.Moment) {
       if (day.day() == 6 || day.day() == 0 || day.day() == 5) {
