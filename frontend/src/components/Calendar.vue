@@ -1,19 +1,30 @@
 <template>
   <div class="content">
     <h2>Months</h2>
-    <div class="__months" v-for="(month, index) in yearArray" :key="index">
-      <template v-if="month !== null">
-        <h2 class="__name">{{ getNameOfMonth(month, index) }}</h2>
-        <div v-for="n in getOffset(month)" :key="`${month}${n}`"></div>
-        <div v-for="n in getUnselectedDays(month)" :key="n"></div>
-        <template v-for="(bolk, index) in month">
-          <div v-for="day in bolk" :class="`Bolk${index}`" :key="`Bolk${day}`">
-            {{ day }}
-            <button :disabled="isWeekend(day)">
-              Button
-            </button>
-          </div>
-        </template>
+    <div
+      class="__months"
+      v-for="(month, index) in nonNullItems(yearArray)"
+      :key="index"
+    >
+      <h2 class="__name">{{ getNameOfMonth(month, index) }}</h2>
+      <p v-for="s in 7" :key="`weekday${s}`">{{ getWeekday(s) }}</p>
+      <div
+        class="__offset"
+        v-for="n in getOffset(month)"
+        :key="`${month}${n}`"
+      ></div>
+      <div
+        class="__offset__day"
+        v-for="n in getUnselectedDays(month)"
+        :key="n"
+      ></div>
+      <template v-for="(bolk, index) in month">
+        <div v-for="day in bolk" :class="`Bolk${index}`" :key="`Bolk${day}`">
+          {{ getDay(day) }}
+          <button :disabled="isWeekend(day)">
+            Disable date
+          </button>
+        </div>
       </template>
     </div>
   </div>
@@ -118,8 +129,22 @@ export default Vue.extend({
         return moment(index + 1, "MM").format("MMMM");
       }
     },
+    getWeekday(s: number) {
+      return moment()
+        .weekday(s)
+        .format("dddd");
+    },
+    getDay(day: moment.Moment) {
+      return moment(day).format("DD");
+    },
     methodThatForcesUpdate() {
       this.$forceUpdate();
+    },
+    nonNullItems(array: [] | null) {
+      if (array == null) return;
+      return array.filter(function(item) {
+        return item;
+      });
     }
   },
   computed: {
@@ -154,32 +179,52 @@ export default Vue.extend({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 90vw;
 }
 
 .__months {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 7fr 7fr 7fr 7fr 7fr 7fr;
+  grid-gap: 3px;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 7fr 7fr 7fr 7fr 7fr 7fr 7fr 7fr;
   .__name {
     grid-column-start: 1;
     grid-column-end: 8;
   }
+  .__offset {
+    background: #d9d9d9;
+    -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    height: 100px;
+    &__day {
+      background: #d9d9d9;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+  }
   .Bolk {
     &0 {
-      background-color: green;
+      background-color: #6dad57;
+      border-radius: 3px;
+
       &:disabled {
         background-color: grey;
       }
     }
     &1 {
-      background-color: yellow;
+      background-color: #f4d258;
+      border-radius: 3px;
+
       &:disabled {
         background-color: grey;
       }
     }
     &2 {
-      background-color: orange;
+      background-color: #d4aa41;
+      border-radius: 3px;
+
       &:disabled {
         background-color: grey;
       }
