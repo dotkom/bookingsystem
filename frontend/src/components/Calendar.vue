@@ -2,16 +2,18 @@
   <div class="content">
     <h2>Months</h2>
     <div class="__months" v-for="(month, index) in yearArray" :key="index">
-      <p class="__name">{{ getNameOfMonth(month, index) }}</p>
-      <div v-for="n in getOffset(month)" :key="`${month}${n}`"></div>
-      <div v-for="n in getUnselectedDays(month)" :key="n"></div>
-      <template v-for="(bolk, index) in month">
-        <div v-for="day in bolk" :class="`Bolk${index}`" :key="`Bolk${day}`">
-          {{ day }}
-          <button :disabled="isWeekend(day)">
-            Button
-          </button>
-        </div>
+      <template v-if="month !== null">
+        <h2 class="__name">{{ getNameOfMonth(month, index) }}</h2>
+        <div v-for="n in getOffset(month)" :key="`${month}${n}`"></div>
+        <div v-for="n in getUnselectedDays(month)" :key="n"></div>
+        <template v-for="(bolk, index) in month">
+          <div v-for="day in bolk" :class="`Bolk${index}`" :key="`Bolk${day}`">
+            {{ day }}
+            <button :disabled="isWeekend(day)">
+              Button
+            </button>
+          </div>
+        </template>
       </template>
     </div>
   </div>

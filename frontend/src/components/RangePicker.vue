@@ -83,12 +83,12 @@ export default Vue.extend({
   },
   data() {
     return {
-      bolk1EndDisabled: true,
-      bolk2StartDisabled: true,
-      bolk2EndDisabled: true,
-      bolk3StartDisabled: true,
-      bolk3EndDisabled: true,
-      stepDisabled: false
+      bolk1EndDisabled: true as boolean,
+      bolk2StartDisabled: true as boolean,
+      bolk2EndDisabled: true as boolean,
+      bolk3StartDisabled: true as boolean,
+      bolk3EndDisabled: true as boolean,
+      stepDisabled: false as boolean
     };
   },
   methods: {
@@ -113,8 +113,8 @@ export default Vue.extend({
       this.$store.dispatch("SET_BOLK_3_START_DATE", chosenDate as string);
     },
     updateBolk3EndDate(chosenDate: string) {
-      this.$store.dispatch("SET_BOLK_3_END_DATE", chosenDate as string);
       this.stepDisabled = false;
+      this.$store.dispatch("SET_BOLK_3_END_DATE", chosenDate as string);
     },
     updateSeasonName(event: any) {
       this.$store.dispatch("SET_SEASON_NAME", (event.target as HTMLInputElement)

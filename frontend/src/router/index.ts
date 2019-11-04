@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import CompanyLogin from "@/views/company/CompanyLogin.vue";
-import Bedkom from "@/views/bedkom/Bedkom.vue";
+import admin from "@/views/admin/Admin.vue";
 
 Vue.use(VueRouter);
 
@@ -12,9 +12,9 @@ const routes = [
     component: CompanyLogin
   },
   {
-    path: "/bedkom",
-    name: "bedkom",
-    component: Bedkom
+    path: "/admin",
+    name: "admin",
+    component: admin
   }
 ];
 
