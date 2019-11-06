@@ -13,10 +13,10 @@ const app: express.Application = express();
 app.use(formidableMiddleware());
 app.use('*', cors());
 
-app.post('/accesstoken', (req, res, next) => {
+app.post('/accesstoken', async (req, res, next) => {
   try {
     const values = req.fields;
-    insertSingleRow(
+    await insertSingleRow(
       'insert into keys (accesstoken) VALUES ($1) on conflict do nothing',
       [values[0] as string],
     );
@@ -49,8 +49,8 @@ app.get('/error', async (req, res, next) => {
   }
 });
 
-app.use((err, req, res, next) => {
-  handleError(err, res);
+app.use(async (err, req, res, next) => {
+  await handleError(err, res);
 });
 
 app.listen(3000, () => {

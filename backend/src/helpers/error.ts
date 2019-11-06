@@ -12,7 +12,7 @@ export class ErrorHandler extends Error {
     this.extra = extra;
   }
 }
-export const handleError = (err, res) => {
+export const handleError = async (err, res) => {
   const { statusCode, message, extra } = err;
   res.status(statusCode).json({
     status: 'error',

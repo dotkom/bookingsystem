@@ -13,11 +13,14 @@ const pgconfig: PoolConfig = {
 
 const pool = new Pool(pgconfig);
 
-pool.on('error', (err: Error, client: ClientConfig) => {
+pool.on('error', async (err: Error, client: ClientConfig) => {
   throw new ErrorHandler(500, String(err), client);
 });
 
-const validSQLStatment = (type: string, sqlStatement: string) => {
+const validSQLStatment = async (
+  type: string,
+  sqlStatement: string,
+) => {
   if (!sqlStatement.includes(type)) {
     throw new ErrorHandler(500, 'Invalid SQL statement');
   }
@@ -47,7 +50,7 @@ const executeQuery = async (
 export const createTable = async (sqlStatement: string) => {
   const type = 'create table';
   try {
-    validSQLStatment(type, sqlStatement);
+    await validSQLStatment(type, sqlStatement);
     return executeQuery(sqlStatement);
   } catch (err) {
     throw err;
@@ -60,7 +63,7 @@ export const insertSingleRow = async (
 ) => {
   const type = 'insert into';
   try {
-    validSQLStatment(type, sqlStatement);
+    await validSQLStatment(type, sqlStatement);
     return executeQuery(sqlStatement, data);
   } catch (err) {
     throw err;
@@ -73,7 +76,7 @@ export const getRows = async (
 ) => {
   const type = 'select';
   try {
-    validSQLStatment(type, sqlStatement);
+    await validSQLStatment(type, sqlStatement);
     return executeQuery(sqlStatement, data);
   } catch (err) {
     throw err;
