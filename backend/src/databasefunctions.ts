@@ -17,11 +17,12 @@ pool.on('error', async (err: Error, client: ClientConfig) => {
   throw new ErrorHandler(500, String(err), client);
 });
 
-const validSQLStatment = async (
-  type: string,
+const validateSQLStatement = async (
+  sqlKeyword: string,
   sqlStatement: string,
 ) => {
-  if (!sqlStatement.includes(type)) {
+  const isValidSqlStatement = sqlStatement.includes(sqlKeyword)
+  if (!isValidSqlStatement) {
     throw new ErrorHandler(500, 'Invalid SQL statement');
   }
 };
@@ -48,9 +49,9 @@ const executeQuery = async (
   }
 };
 export const createTable = async (sqlStatement: string) => {
-  const type = 'create table';
+  const sqlKeyword = 'create table';
   try {
-    await validSQLStatment(type, sqlStatement);
+    await validateSQLStatement(sqlKeyword, sqlStatement);
     return executeQuery(sqlStatement);
   } catch (err) {
     throw err;
@@ -61,9 +62,9 @@ export const insertSingleRow = async (
   sqlStatement: string,
   data: string[],
 ) => {
-  const type = 'insert into';
+  const sqlKeyword = 'insert into';
   try {
-    await validSQLStatment(type, sqlStatement);
+    await validateSQLStatement(sqlKeyword, sqlStatement);
     return executeQuery(sqlStatement, data);
   } catch (err) {
     throw err;
@@ -74,9 +75,9 @@ export const getRows = async (
   sqlStatement: string,
   data: string[] = [],
 ) => {
-  const type = 'select';
+  const sqlKeyword = 'select';
   try {
-    await validSQLStatment(type, sqlStatement);
+    await validateSQLStatement(sqlKeyword, sqlStatement);
     return executeQuery(sqlStatement, data);
   } catch (err) {
     throw err;
