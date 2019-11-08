@@ -18,7 +18,7 @@ const pgconfig: PoolConfig = {
 
 const pool = new Pool(pgconfig);
 
-pool.on('error', async (err: Error, client: ClientConfig) => {
+pool.on('error', async (err: Error) => {
   throw new ErrorHandler(500, String(err));
 });
 

@@ -7,6 +7,7 @@ import { QueryResultRow } from 'pg';
 import { NextFunction } from 'connect';
 import { extractPayload } from '../utils';
 import { Fields } from 'formidable';
+import { ErrorHandler } from '../helpers/error';
 const app = (module.exports = require('express')());
 
 app.post(
@@ -29,6 +30,7 @@ app.post(
         const payload: Object = { status: 'success' };
         res.status(200).send(payload);
       }
+      throw new ErrorHandler(500, 'No acesstoken retrived');
     } catch (error) {
       next(error);
     }

@@ -4,7 +4,7 @@ services:
     container_name: bookingsystem_backend
     build: ./backend
     ports:
-      - "3000:500"
+      - "3000:3000"
     environment:
       - DBUSER=postgres
       - DBPASSWORD=password
