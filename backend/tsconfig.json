@@ -3,22 +3,19 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     // Where are located your source code
     "rootDir": "src",
     // Where you want to put our compiled code
     "outDir": "build",
     "strict": true,
-    "alwaysStrict": false,
     // Which ES library you want to include
     // If the project will be used as a server, no browser, then use the esnext or one of the last version)
     // Otherwise, you I advice using ES6 but you still can use an advance ES version
     // If you omit the option it will use
     // For --target ES5: DOM,ES5,ScriptHost
     // For --target ES6: DOM,ES6,DOM.Iterable,ScriptHost
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "lib": ["es2018", "dom"],
     // Which ES version you want to target during compilation, this is reliable to the `lib` option
     // This options is really important regarding the project usage too (back or front)
     // Put ES5 if you need to IE compatibility, otherwise you can target at least es2017 or es2018
@@ -44,8 +41,5 @@
   },
   // The folder or files you want to exclude
   // You can also use regex `**/*.spec.ts` for ex
-  "exclude": [
-    "node_modules",
-    "build"
-  ]
+  "exclude": ["node_modules", "build"]
 }

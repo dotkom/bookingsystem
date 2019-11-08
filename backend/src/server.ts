@@ -33,5 +33,7 @@ app.use(
   },
 );
 app.listen(3000, (): void => {
-  console.log('Example app listening on port 3000!');
+  console.log(
+    `Example app listening on port ${process.env.RUNPORT}!`,
+  );
 });
