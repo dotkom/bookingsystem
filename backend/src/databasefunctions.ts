@@ -1,4 +1,4 @@
-import { PoolConfig, ClientConfig } from 'pg';
+import { PoolConfig, ClientConfig, PoolClient, QueryResultRow } from 'pg';
 import { ErrorHandler } from './helpers/error';
 const { Pool } = require('pg');
 require('dotenv').config();
@@ -8,19 +8,19 @@ const pgconfig: PoolConfig = {
   database: process.env.DATABASENAME,
   password: process.env.DBPASSWORD,
   host: process.env.DBHOST,
-  port: parseInt(process.env.DBPORT),
+  port: Number(process.env.DBPORT),
 };
 
 const pool = new Pool(pgconfig);
 
 pool.on('error', async (err: Error, client: ClientConfig) => {
-  throw new ErrorHandler(500, String(err), client);
+  throw new ErrorHandler(500, String(err));
 });
 
 const validateSQLStatement = async (
   sqlKeyword: string,
   sqlStatement: string,
-) => {
+): Promise<ErrorHandler | void> => {
   const isValidSqlStatement = sqlStatement.includes(sqlKeyword)
   if (!isValidSqlStatement) {
     throw new ErrorHandler(500, 'Invalid SQL statement');
@@ -30,25 +30,25 @@ const validateSQLStatement = async (
 const executeQuery = async (
   sqlStatement: string,
   data?: Array<String>,
-) => {
-  let client;
+): Promise<QueryResultRow | ErrorHandler> => {
+  let client: PoolClient | undefined;
   try {
     client = await pool.connect();
-    const res = data
-      ? await client.query(sqlStatement, data)
-      : await client.query(sqlStatement);
-    return res;
-  } catch (err) {
-    throw new ErrorHandler(500, 'Failed to execute SQL query');
+    if (client !== undefined) {
+      const res = data
+        ? await client.query(sqlStatement, data)
+        : await client.query(sqlStatement);
+      return res;
+    } throw new ErrorHandler(500, 'Failed to execute SQL query');
   } finally {
-    try {
+    if (client !== undefined) {
       client.release();
-    } catch (err) {
+    } else {
       throw new ErrorHandler(500, 'Failed to release SQL client');
     }
   }
 };
-export const createTable = async (sqlStatement: string) => {
+export const createTable = async (sqlStatement: string): Promise<QueryResultRow | ErrorHandler> => {
   const sqlKeyword = 'create table';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
@@ -61,7 +61,7 @@ export const createTable = async (sqlStatement: string) => {
 export const insertSingleRow = async (
   sqlStatement: string,
   data: string[],
-) => {
+): Promise<QueryResultRow | ErrorHandler> => {
   const sqlKeyword = 'insert into';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
@@ -74,7 +74,7 @@ export const insertSingleRow = async (
 export const getRows = async (
   sqlStatement: string,
   data: string[] = [],
-) => {
+): Promise<QueryResultRow | ErrorHandler> => {
   const sqlKeyword = 'select';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
