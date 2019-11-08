@@ -1,5 +1,10 @@
-import { PoolConfig, ClientConfig, PoolClient, QueryResultRow } from 'pg';
-import { ErrorHandler } from './helpers/error';
+import {
+  PoolConfig,
+  ClientConfig,
+  PoolClient,
+  QueryResultRow,
+} from 'pg';
+import { ErrorHandler } from './error';
 const { Pool } = require('pg');
 require('dotenv').config();
 
@@ -21,7 +26,7 @@ const validateSQLStatement = async (
   sqlKeyword: string,
   sqlStatement: string,
 ): Promise<ErrorHandler | void> => {
-  const isValidSqlStatement = sqlStatement.includes(sqlKeyword)
+  const isValidSqlStatement = sqlStatement.includes(sqlKeyword);
   if (!isValidSqlStatement) {
     throw new ErrorHandler(500, 'Invalid SQL statement');
   }
@@ -39,7 +44,8 @@ const executeQuery = async (
         ? await client.query(sqlStatement, data)
         : await client.query(sqlStatement);
       return res;
-    } throw new ErrorHandler(500, 'Failed to execute SQL query');
+    }
+    throw new ErrorHandler(500, 'Failed to execute SQL query');
   } finally {
     if (client !== undefined) {
       client.release();
@@ -48,7 +54,9 @@ const executeQuery = async (
     }
   }
 };
-export const createTable = async (sqlStatement: string): Promise<QueryResultRow | ErrorHandler> => {
+export const createTable = async (
+  sqlStatement: string,
+): Promise<QueryResultRow | ErrorHandler> => {
   const sqlKeyword = 'create table';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
