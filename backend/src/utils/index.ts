@@ -11,4 +11,3 @@ export const extractPayload = async (
   }
   throw new ErrorHandler(500, 'Did not recieve a payload');
 };
-

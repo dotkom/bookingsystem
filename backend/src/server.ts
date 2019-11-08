@@ -6,18 +6,23 @@ const routes = require('./routes');
 const app: express.Application = express();
 
 const whitelist = ['http://localhost:8080'];
-const corsOptions: cors.CorsOptions = {
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'X-Access-Token',
-  ],
-  credentials: true,
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: whitelist,
-  preflightContinue: false,
+
+const corsOptions: object = {
+  origin: (origin: string, callback: Function): void => {
+    //allows things without origin to connect to the API (CORS,mobile, ++)
+    if (!origin) return callback(null, true);
+    if (whitelist.indexOf(origin) === -1) {
+      return callback(
+        new ErrorHandler(
+          500,
+          'The CORS policy for this site does not ' +
+            'allow access from the specified Origin.',
+        ),
+        false,
+      );
+    }
+    return callback(null, true);
+  },
 };
 
 app.use(formidableMiddleware());

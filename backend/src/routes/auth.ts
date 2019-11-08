@@ -19,9 +19,11 @@ app.post(
   ) => {
     try {
       const values = (await extractPayload(req)) as Fields;
+      // if we generate our own accesstokens we should validate them somehow.
       const accesstoken =
-        values[0] !== undefined ? (values[0] as string) : false;
-      // Should split the part where we add the accesstoken to the database into it's own function.
+        values[0] !== undefined && typeof values[0] === 'string'
+          ? (values[0] as string)
+          : false;
       if (accesstoken) {
         await insertSingleRow(
           'insert into keys (accesstoken) VALUES ($1) on conflict do nothing',
@@ -29,8 +31,9 @@ app.post(
         );
         const payload: Object = { status: 'success' };
         res.status(200).send(payload);
+      } else {
+        throw new ErrorHandler(500, 'No valid acesstoken received');
       }
-      throw new ErrorHandler(500, 'No acesstoken retrived');
     } catch (error) {
       next(error);
     }
@@ -46,13 +49,21 @@ app.post(
   ) => {
     try {
       const values = (await extractPayload(req)) as Fields;
-      const query: QueryResultRow = await getRows(
-        'select * from keys where accesstoken = $1',
-        [values[0] as string],
-      );
-      const foundData: boolean =
-        query.rows[0] && query.rows.length !== 0 ? true : false;
-      res.status(200).send(foundData);
+      const accesstoken =
+        values[0] !== undefined && typeof values[0] === 'string'
+          ? (values[0] as string)
+          : false;
+      if (accesstoken) {
+        const query: QueryResultRow = await getRows(
+          'select * from keys where accesstoken = $1',
+          [values[0] as string],
+        );
+        const foundData: boolean =
+          query.rows[0] && query.rows.length !== 0 ? true : false;
+        res.status(200).send(foundData);
+      } else {
+        throw new ErrorHandler(500, 'No valid acesstoken received');
+      }
     } catch (error) {
       next(error);
     }
