@@ -5,7 +5,7 @@ import {
 import express from 'express';
 import { QueryResultRow } from 'pg';
 import { NextFunction } from 'connect';
-import { extractPayload } from '../utils';
+import { extractPayload, foundData } from '../utils';
 import { Fields } from 'formidable';
 import { ErrorHandler } from '../helpers/error';
 const app = (module.exports = require('express')());
@@ -56,11 +56,16 @@ app.post(
       if (accesstoken) {
         const query: QueryResultRow = await getRows(
           'select * from keys where accesstoken = $1',
-          [values[0] as string],
+          [accesstoken],
         );
-        const foundData: boolean =
-          query.rows[0] && query.rows.length !== 0 ? true : false;
-        res.status(200).send(foundData);
+        const tokenExists = await foundData(query);
+        if (tokenExists) {
+          res.status(200).send(tokenExists);
+        }
+        throw new ErrorHandler(
+          500,
+          'Failed to login, found no matching accesstokens',
+        );
       } else {
         throw new ErrorHandler(500, 'No valid acesstoken received');
       }

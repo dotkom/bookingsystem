@@ -1,4 +1,4 @@
-import { PoolConfig, PoolClient, QueryResultRow, Pool } from 'pg';
+import { PoolConfig, QueryResultRow, Pool } from 'pg';
 import { ErrorHandler } from './error';
 import { executeQuery, validateSQLStatement } from '../utils';
 

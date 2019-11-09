@@ -34,3 +34,10 @@ export const executeQuery = async (
     }
   }
 };
+
+export const foundData = async (
+  payload: QueryResultRow,
+): Promise<boolean> => {
+  return payload.rows.length !== 0 ? true : false;
+};
+
