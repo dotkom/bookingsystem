@@ -1,11 +1,7 @@
-import {
-  PoolConfig,
-  ClientConfig,
-  PoolClient,
-  QueryResultRow,
-} from 'pg';
+import { PoolConfig, PoolClient, QueryResultRow, Pool } from 'pg';
 import { ErrorHandler } from './error';
-const { Pool } = require('pg');
+import { executeQuery, validateSQLStatement } from '../utils';
+
 require('dotenv').config();
 
 const pgconfig: PoolConfig = {
@@ -22,45 +18,13 @@ pool.on('error', async (err: Error) => {
   throw new ErrorHandler(500, String(err));
 });
 
-const validateSQLStatement = async (
-  sqlKeyword: string,
-  sqlStatement: string,
-): Promise<ErrorHandler | void> => {
-  const isValidSqlStatement = sqlStatement.includes(sqlKeyword);
-  if (!isValidSqlStatement) {
-    throw new ErrorHandler(500, 'Invalid SQL statement');
-  }
-};
-
-const executeQuery = async (
-  sqlStatement: string,
-  data?: Array<String>,
-): Promise<QueryResultRow | ErrorHandler> => {
-  let client: PoolClient | undefined;
-  try {
-    client = await pool.connect();
-    if (client !== undefined) {
-      const res = data
-        ? await client.query(sqlStatement, data)
-        : await client.query(sqlStatement);
-      return res;
-    }
-    throw new ErrorHandler(500, 'Failed to execute SQL query');
-  } finally {
-    if (client !== undefined) {
-      client.release();
-    } else {
-      throw new ErrorHandler(500, 'Failed to release SQL client');
-    }
-  }
-};
 export const createTable = async (
   sqlStatement: string,
 ): Promise<QueryResultRow | ErrorHandler> => {
   const sqlKeyword = 'create table';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement);
+    return executeQuery(pool, sqlStatement);
   } catch (err) {
     throw err;
   }
@@ -73,7 +37,7 @@ export const insertSingleRow = async (
   const sqlKeyword = 'insert into';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement, data);
+    return executeQuery(pool, sqlStatement, data);
   } catch (err) {
     throw err;
   }
@@ -86,7 +50,7 @@ export const getRows = async (
   const sqlKeyword = 'select';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement, data);
+    return executeQuery(pool, sqlStatement, data);
   } catch (err) {
     throw err;
   }
