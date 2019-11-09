@@ -28,6 +28,7 @@ const corsOptions: object = {
 app.use(formidableMiddleware());
 app.use('*', cors(corsOptions));
 app.use(routes);
+
 app.use(
   async (
     err: ErrorHandler,
@@ -37,6 +38,7 @@ app.use(
     await handleError(err, res);
   },
 );
+
 app.listen(3000, (): void => {
   console.log(`Example app listening on port 3000!`);
 });

@@ -9,6 +9,7 @@
     // Where you want to put our compiled code
     "outDir": "build",
     "strict": true,
+    "noEmitOnError": true,
     // Which ES library you want to include
     // If the project will be used as a server, no browser, then use the esnext or one of the last version)
     // Otherwise, you I advice using ES6 but you still can use an advance ES version
