@@ -14,7 +14,7 @@ const corsOptions: object = {
     if (whitelist.indexOf(origin) === -1) {
       return callback(
         new ErrorHandler(
-          500,
+          400,
           'The CORS policy for this site does not ' +
             'allow access from the specified Origin.',
         ),

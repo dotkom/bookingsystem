@@ -31,8 +31,6 @@ app.post(
         );
         const payload: Object = { status: 'success' };
         res.status(200).send(payload);
-      } else {
-        throw new ErrorHandler(500, 'No valid acesstoken received');
       }
     } catch (error) {
       next(error);
@@ -63,11 +61,11 @@ app.post(
           res.status(200).send(tokenExists);
         }
         throw new ErrorHandler(
-          500,
-          'Failed to login, found no matching accesstokens',
+          404,
+          'Failed to login, found no matching accesstokens in db',
         );
       } else {
-        throw new ErrorHandler(500, 'No valid acesstoken received');
+        throw new ErrorHandler(404, 'No valid acesstoken received');
       }
     } catch (error) {
       next(error);
