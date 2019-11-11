@@ -16,7 +16,7 @@ app.post(
     req: express.Request,
     res: express.Response,
     next: NextFunction,
-  ) => {
+  ): Promise<void | never> => {
     try {
       const values = (await extractPayload(req)) as Fields;
       // if we generate our own accesstokens we should validate them somehow.
@@ -46,7 +46,7 @@ app.post(
     req: express.Request,
     res: express.Response,
     next: NextFunction,
-  ) => {
+  ): Promise<void | never> => {
     try {
       const values = (await extractPayload(req)) as Fields;
       const accesstoken =

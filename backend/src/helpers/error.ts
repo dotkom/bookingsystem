@@ -10,7 +10,7 @@ export class ErrorHandler extends Error {
 export const handleError = async (
   err: ErrorHandler,
   res: express.Response,
-) => {
+): Promise<void> => {
   const { statusCode, message } = err;
   res.status(statusCode).json({
     status: 'error',

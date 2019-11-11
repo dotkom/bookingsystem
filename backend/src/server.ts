@@ -8,7 +8,7 @@ const app: express.Application = express();
 const whitelist = ['http://localhost:8080'];
 
 const corsOptions: object = {
-  origin: (origin: string, callback: Function): void => {
+  origin: (origin: string, callback: Function): void | never => {
     //allows things without origin to connect to the API (CORS,mobile, ++)
     if (!origin) return callback(null, true);
     if (whitelist.indexOf(origin) === -1) {

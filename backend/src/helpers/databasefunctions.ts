@@ -14,13 +14,16 @@ const pgconfig: PoolConfig = {
 
 const pool = new Pool(pgconfig);
 
-pool.on('error', async (err: Error) => {
-  throw new ErrorHandler(500, String(err));
-});
+pool.on(
+  'error',
+  async (err: Error): Promise<never> => {
+    throw new ErrorHandler(500, String(err));
+  },
+);
 
 export const createTable = async (
   sqlStatement: string,
-): Promise<QueryResultRow | ErrorHandler> => {
+): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'create table';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
@@ -33,7 +36,7 @@ export const createTable = async (
 export const insertSingleRow = async (
   sqlStatement: string,
   data: string[],
-): Promise<QueryResultRow | ErrorHandler> => {
+): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'insert into';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
@@ -46,7 +49,7 @@ export const insertSingleRow = async (
 export const getRows = async (
   sqlStatement: string,
   data: string[] = [],
-): Promise<QueryResultRow | ErrorHandler> => {
+): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'select';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);

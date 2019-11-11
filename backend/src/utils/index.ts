@@ -4,7 +4,7 @@ import { Fields } from 'formidable';
 
 export const extractPayload = async (
   payload: express.Request,
-): Promise<ErrorHandler | Fields> => {
+): Promise<never | Fields> => {
   const isPayload = payload.fields !== undefined;
   if (isPayload) {
     return payload.fields as Fields;

@@ -4,7 +4,7 @@ import { ErrorHandler } from '../helpers/error';
 export const validateSQLStatement = async (
   sqlKeyword: string,
   sqlStatement: string,
-): Promise<ErrorHandler | void> => {
+): Promise<never | void> => {
   const isValidSqlStatement = sqlStatement.includes(sqlKeyword);
   if (!isValidSqlStatement) {
     throw new ErrorHandler(500, 'Invalid SQL statement');
@@ -15,7 +15,7 @@ export const executeQuery = async (
   pool: Pool,
   sqlStatement: string,
   data?: Array<String>,
-): Promise<QueryResultRow | ErrorHandler> => {
+): Promise<QueryResultRow | never> => {
   let client: PoolClient | undefined;
   try {
     client = await pool.connect();
@@ -40,4 +40,3 @@ export const foundData = async (
 ): Promise<boolean> => {
   return payload.rows.length !== 0 ? true : false;
 };
-

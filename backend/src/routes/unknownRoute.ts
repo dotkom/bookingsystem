@@ -4,11 +4,11 @@ import express from 'express';
 
 app.all(
   '/*',
-  (
+  async (
     _req: express.Request,
     _res: express.Response,
     next: express.NextFunction,
-  ) => {
+  ): Promise<void> => {
     next(new ErrorHandler(500, 'Unknown Route'));
   },
 );
