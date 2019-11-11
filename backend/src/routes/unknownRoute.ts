@@ -9,6 +9,6 @@ app.all(
     _res: express.Response,
     next: express.NextFunction,
   ): Promise<void> => {
-    next(new ErrorHandler(404, 'Route not Found'));
+    next(new ErrorHandler(404, { status: 'Route Not Found' }));
   },
 );

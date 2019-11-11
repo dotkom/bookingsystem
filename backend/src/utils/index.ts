@@ -9,7 +9,7 @@ export const extractPayload = async (
   if (isPayload) {
     return payload.fields as Fields;
   }
-  throw new ErrorHandler(404, 'Did not recieve a payload');
+  throw new ErrorHandler(404, { status: 'No Payload' });
 };
 
 export * from './database';

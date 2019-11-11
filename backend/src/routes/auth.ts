@@ -60,12 +60,10 @@ app.post(
         if (tokenExists) {
           res.status(200).send(tokenExists);
         }
-        throw new ErrorHandler(
-          404,
-          'Failed to login, found no matching accesstokens in db',
-        );
+        throw new ErrorHandler(404, { status: 'Wrong Login' });
       } else {
-        throw new ErrorHandler(404, 'No valid acesstoken received');
+        //This is if you recieve a payload containing something other than a string.
+        throw new ErrorHandler(404, { status: 'Wrong Loign' });
       }
     } catch (error) {
       next(error);

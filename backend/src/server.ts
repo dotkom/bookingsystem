@@ -13,11 +13,7 @@ const corsOptions: object = {
     if (!origin) return callback(null, true);
     if (whitelist.indexOf(origin) === -1) {
       return callback(
-        new ErrorHandler(
-          400,
-          'The CORS policy for this site does not ' +
-            'allow access from the specified Origin.',
-        ),
+        new ErrorHandler(400, { status: 'Origin Denied' }),
         false,
       );
     }
