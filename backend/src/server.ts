@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import formidableMiddleware from 'express-formidable';
 import { handleError, ErrorHandler } from './helpers/error';
+import { NextFunction } from 'connect';
 const routes = require('./routes');
 const app: express.Application = express();
 
@@ -30,6 +31,7 @@ app.use(
     err: ErrorHandler,
     _req: express.Request,
     res: express.Response,
+    next: NextFunction,
   ): Promise<void> => {
     await handleError(err, res);
   },

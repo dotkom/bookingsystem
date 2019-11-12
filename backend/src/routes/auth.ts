@@ -31,6 +31,8 @@ app.post(
         );
         const payload: Object = { status: 'success' };
         res.status(200).send(payload);
+      } else {
+        throw new ErrorHandler(404, { status: 'Validation Error' });
       }
     } catch (error) {
       next(error);
@@ -60,10 +62,10 @@ app.post(
         if (tokenExists) {
           res.status(200).send(tokenExists);
         }
-        throw new ErrorHandler(404, { status: 'Wrong Login' });
+        throw new ErrorHandler(404, { status: 'Auth Error' });
       } else {
         //This is if you recieve a payload containing something other than a string.
-        throw new ErrorHandler(404, { status: 'Wrong Loign' });
+        throw new ErrorHandler(404, { status: 'Auth Error' });
       }
     } catch (error) {
       next(error);
