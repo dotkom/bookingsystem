@@ -61,6 +61,7 @@ app.post(
         const tokenExists = await foundData(query);
         if (tokenExists) {
           res.status(200).send(tokenExists);
+          return;
         }
         throw new ErrorHandler(404, { status: 'Auth Error' });
       } else {
