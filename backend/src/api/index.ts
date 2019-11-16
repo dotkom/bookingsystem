@@ -1,8 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import formidableMiddleware from 'express-formidable';
-import { handleError, ErrorHandler } from './helpers/error';
-import { NextFunction } from 'connect';
+import { ErrorHandler } from '../helpers/error';
+import {
+  formidableErrorHandler,
+  centralErrorHandler,
+} from './controllers';
+
 const routes = require('./routes');
 const app: express.Application = express();
 
@@ -26,16 +30,8 @@ app.use(formidableMiddleware());
 app.use('*', cors(corsOptions));
 app.use(routes);
 
-app.use(
-  async (
-    err: ErrorHandler,
-    _req: express.Request,
-    res: express.Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    await handleError(err, res);
-  },
-);
+app.use(formidableErrorHandler);
+app.use(centralErrorHandler);
 
 app.listen(3000, (): void => {
   console.log(`Example app listening on port 3000!`);

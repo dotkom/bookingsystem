@@ -1,5 +1,5 @@
 const app = (module.exports = require('express')());
-import { ErrorHandler } from '../helpers/error';
+import { ErrorHandler } from '../../helpers/error';
 import express from 'express';
 
 app.all(
