@@ -26,6 +26,6 @@ export const centralErrorHandler = async (
   _next: NextFunction,
 ): Promise<void> => {
   if (!isformidableError(err)) {
-    await handleError(err, res);
+    await handleError({ err, res });
   }
 };

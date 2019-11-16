@@ -26,6 +26,8 @@ export const executeQuery = async (
       return res;
     }
     throw new ErrorHandler(500, { status: 'Database Error' });
+  } catch (e) {
+    throw new ErrorHandler(500, { status: 'Database Error' });
   } finally {
     if (client !== undefined) {
       client.release();

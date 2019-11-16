@@ -9,6 +9,8 @@ export const extractPayload = async (
     const isPayload = payload.fields !== undefined;
     if (isPayload) {
       return payload.fields as Fields;
+    } else {
+      throw new ErrorHandler(404, { status: 'No Payload' });
     }
   } catch (e) {
     throw new ErrorHandler(404, { status: 'No Payload' });
