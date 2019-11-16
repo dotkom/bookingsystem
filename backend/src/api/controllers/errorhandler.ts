@@ -1,16 +1,14 @@
 import { ErrorHandler, handleError } from '../../helpers/error';
 import express, { NextFunction } from 'express';
 
+import { isformidableError } from '../../utils';
 export const formidableErrorHandler = async (
   err: ErrorHandler | Error,
   _req: express.Request,
   res: express.Response,
   next: NextFunction,
 ) => {
-  if (
-    err instanceof SyntaxError &&
-    String(err.stack).includes('formidable')
-  ) {
+  if (isformidableError(err)) {
     res.status(400).json({
       status: 'error',
       statusCode: 400,
@@ -27,7 +25,7 @@ export const centralErrorHandler = async (
   res: express.Response,
   _next: NextFunction,
 ): Promise<void> => {
-  if (!(err instanceof SyntaxError)) {
+  if (!isformidableError(err)) {
     await handleError(err, res);
   }
 };
