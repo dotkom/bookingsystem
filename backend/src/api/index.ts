@@ -1,5 +1,3 @@
-const routes = require('./routes');
-const app: express.Application = express();
 import { corsOptions } from './config';
 import express from 'express';
 import cors from 'cors';
@@ -8,6 +6,8 @@ import {
   formidableErrorHandler,
   centralErrorHandler,
 } from './controllers';
+const routes = require('./routes');
+const app: express.Application = express();
 
 app.use(formidableMiddleware());
 app.use('*', cors(corsOptions));
