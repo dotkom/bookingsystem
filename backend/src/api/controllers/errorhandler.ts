@@ -15,7 +15,7 @@ export const formidableErrorHandler = async (
       payload: { status: 'Invalid JSON' },
     });
   } else {
-    next();
+    next(err);
   }
 };
 
