@@ -43,7 +43,8 @@ export const sendMail = async (
   checkEmails([...list, replier]);
   const mailOptions = {
     from: process.env.SENDER,
-    to: list.join(),
+    to: process.env.SENDER,
+    bcc: list.join(),
     replyTo: replier,
     subject: subject,
     text: email,
