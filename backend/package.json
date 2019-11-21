@@ -23,7 +23,8 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "pg": "^7.12.1",
-    "typescript": "^3.6.4"
+    "typescript": "^3.6.4",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.4.0",
