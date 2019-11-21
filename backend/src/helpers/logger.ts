@@ -9,8 +9,10 @@ const standardFormat = printf(
 );
 
 const errorFormat = printf(
-  ({ statusCode, service, timestamp, stack }) => {
-    return `${timestamp} Service: ${service} Status: ${statusCode} | ${stack}`;
+  ({ statusCode, service, timestamp, stack, payload }) => {
+    return `${timestamp} Service: ${service} Status: ${statusCode} Message:${JSON.stringify(
+      payload,
+    )} | ${stack}`;
   },
 );
 
