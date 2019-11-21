@@ -7,7 +7,7 @@ export const validateSQLStatement = async (
 ): Promise<never | void> => {
   const isValidSqlStatement = sqlStatement.includes(sqlKeyword);
   if (!isValidSqlStatement) {
-    throw new ErrorHandler(500, { status: 'Database Error' });
+    throw new ErrorHandler(400, { status: 'Database Error' });
   }
 };
 
@@ -27,7 +27,7 @@ export const executeQuery = async (
     }
     throw new ErrorHandler(500, { status: 'Database Error' });
   } catch (e) {
-    throw new ErrorHandler(500, { status: 'Database Error' });
+    throw new ErrorHandler(400, { status: 'Database Error' });
   } finally {
     if (client !== undefined) {
       client.release();

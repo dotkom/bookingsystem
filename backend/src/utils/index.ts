@@ -10,10 +10,10 @@ export const extractPayload = async (
     if (isPayload) {
       return payload.fields as Fields;
     } else {
-      throw new ErrorHandler(404, { status: 'No Payload' });
+      throw new ErrorHandler(400, { status: 'No Payload' });
     }
   } catch (e) {
-    throw new ErrorHandler(404, { status: 'No Payload' });
+    throw new ErrorHandler(400, { status: 'No Payload' });
   }
 };
 

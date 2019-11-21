@@ -23,13 +23,13 @@ export const newAccesstoken = async (
         : false;
     if (accesstoken) {
       await insertSingleRow(
-        'insert into keys (accesstoken) VALUES ($1) on conflict do nothing',
+        'insert into keys (accesstoken) VALUES ($1)',
         [accesstoken],
       );
       const payload: Object = { status: 'success' };
       res.status(200).send(payload);
     } else {
-      throw new ErrorHandler(404, { status: 'Validation Error' });
+      throw new ErrorHandler(400, { status: 'Validation Error' });
     }
   } catch (error) {
     next(error);
@@ -57,10 +57,10 @@ export const companyLogin = async (
         res.status(200).send(tokenExists);
         return;
       }
-      throw new ErrorHandler(404, { status: 'Auth Error' });
+      throw new ErrorHandler(400, { status: 'Auth Error' });
     } else {
       //This is if you recieve a payload containing something other than a string.
-      throw new ErrorHandler(404, { status: 'Auth Error' });
+      throw new ErrorHandler(400, { status: 'Auth Error' });
     }
   } catch (error) {
     next(error);

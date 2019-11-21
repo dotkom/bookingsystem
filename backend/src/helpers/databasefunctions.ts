@@ -17,7 +17,7 @@ const pool = new Pool(pgconfig);
 pool.on(
   'error',
   async (_err: Error): Promise<never> => {
-    throw new ErrorHandler(500, { status: 'Database Error' });
+    throw new ErrorHandler(400, { status: 'Database Error' });
   },
 );
 
