@@ -1,7 +1,7 @@
-const app = (module.exports = require('express')());
 import { ErrorHandler } from '../../helpers/error';
-import express from 'express';
 
+import express from 'express';
+const app: express.Application = express();
 app.all(
   '/*',
   async (
@@ -12,3 +12,5 @@ app.all(
     next(new ErrorHandler(404, { status: 'Route Not Found' }));
   },
 );
+
+export default app;
