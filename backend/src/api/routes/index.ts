@@ -1,5 +1,11 @@
-const app = (module.exports = require('express')());
+import express from 'express';
 
-app.use('/auth', require('./auth'));
+import auth from './auth';
+import unknown from './unknown';
+const app: express.Application = express();
 
-app.use('/', require('./unknown'));
+app.use('/auth', auth);
+
+app.use('/', unknown);
+
+export default app;

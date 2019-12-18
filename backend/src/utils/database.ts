@@ -14,7 +14,7 @@ export const validateSQLStatement = async (
 export const executeQuery = async (
   pool: Pool,
   sqlStatement: string,
-  data?: Array<String>,
+  data?: Array<string>,
 ): Promise<QueryResultRow | never> => {
   let client: PoolClient | undefined;
   try {

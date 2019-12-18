@@ -26,7 +26,7 @@ export const newAccesstoken = async (
         'insert into keys (accesstoken) VALUES ($1)',
         [accesstoken],
       );
-      const payload: Object = { status: 'success' };
+      const payload: Record<string, string> = { status: 'success' };
       res.status(200).send(payload);
     } else {
       throw new ErrorHandler(400, { status: 'Validation Error' });
