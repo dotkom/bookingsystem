@@ -1,7 +1,8 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 require('dotenv').config();
 import { ErrorHandler } from './error';
 import { validEmail } from '../utils/validators';
+import Mail from 'nodemailer/lib/mailer';
 
 const createTransporter = async (): Promise<null | ReturnType<
   typeof nodemailer.createTransport
@@ -49,7 +50,7 @@ export const sendMail = async (
     subject: subject,
     text: email,
   };
-  const transporter = await createTransporter();
+  const transporter = (await createTransporter()) as Mail;
   try {
     const info = await transporter.sendMail(mailOptions);
   } catch (err) {

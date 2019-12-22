@@ -1,0 +1,81 @@
+name: Publish
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      #Required to send data to github
+      - uses: actions/checkout@v1
+      #Installing Deps
+      - name: Deps for Backend
+        working-directory: ./backend
+        run: npm install
+      - name: Deps for Frontend
+        working-directory: ./frontend
+        run: npm install
+      #Linting Code
+      - name: Linting Backend
+        working-directory: ./backend
+        run: npm run lint
+      - name: Linting Frontend
+        working-directory: ./frontend
+        run: npm run lint
+        #Compiling Code
+      - name: Compile Backend
+        working-directory: ./backend
+        run: npm run-script build
+      - name: Compile Frontend
+        working-directory: ./frontend
+        run: npm run-script build
+        #Bulding Docker Images
+      - name: Build Docker Image for Backend
+        working-directory: ./backend
+        run: docker build -t bookingbackend .
+      - name: Build Docker Image for Database
+        working-directory: ./database
+        run: docker build -t bookingdatabase .
+      - name: Build Docker Image for Frontend
+        working-directory: ./frontend
+        run: docker build -t bookingfrontend  .
+      #Running Unit Tests
+      - name: Testing backend
+        working-directory: ./backend
+        run: npm test
+      - name: Testing frontend
+        working-directory: ./frontend
+        run: npm run test:unit
+      #Running Integration Test
+      - name: Starting Database Image
+        run: docker run --rm --name bookingsystem_database -d -p 5018:5432 bookingdatabase
+      #Publish to registry
+      - name: Publish frontend to registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: bookingsystem/frontend
+          username: ${{ secrets. DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: registry.online.ntnu.no
+          tag_names: true
+          workdir: ./frontend
+      - name: Publish backend to registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: bookingsystem/backend
+          username: ${{ secrets. DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: registry.online.ntnu.no
+          tag_names: true
+          workdir: ./backend
+      - name: Publish db to registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: bookingsystem/db
+          username: ${{ secrets. DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: registry.online.ntnu.no
+          tag_names: true
+          workdir: ./database

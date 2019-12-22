@@ -34,7 +34,7 @@
     "module": "commonjs",
     // Sourcemap is usefull for the debugging part
     // During dev you should active this one and then disable it in production
-    "sourceMap": true,
+    "sourceMap": false,
     // Reolve `.json`file without tricking with a custom and bad json.d.ts file
     "resolveJsonModule": true,
     // Allow to import node module without `import *`

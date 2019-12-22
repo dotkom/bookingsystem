@@ -6,7 +6,8 @@ import {
   formidableErrorHandler,
   centralErrorHandler,
 } from './controllers';
-const routes = require('./routes');
+import routes from './routes';
+
 const app: express.Application = express();
 
 app.use(formidableMiddleware());
@@ -16,6 +17,8 @@ app.use(routes);
 app.use(formidableErrorHandler);
 app.use(centralErrorHandler);
 
-app.listen(3000, (): void => {
+const server = app.listen(3000, (): void => {
   console.log(`Example app listening on port 3000!`);
 });
+
+export default { app, server };

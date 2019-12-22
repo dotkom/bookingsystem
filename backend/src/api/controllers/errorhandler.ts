@@ -7,7 +7,7 @@ export const formidableErrorHandler = async (
   _req: express.Request,
   res: express.Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   if (isformidableError(err)) {
     res.status(400).json({
       status: 'error',
