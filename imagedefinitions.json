@@ -1,0 +1,14 @@
+[
+  {
+    "name": "backend",
+    "imageUri": "registry.online.ntnu.no/bookingsystem/backend:latest"
+  },
+  {
+    "name": "frontend",
+    "imageUri": "registry.online.ntnu.no/bookingsystem/frontend:latest"
+  },
+  {
+    "name": "db",
+    "imageUri": "registry.online.ntnu.no/bookingsystem/db:latest"
+  }
+]

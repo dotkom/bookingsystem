@@ -1,9 +1,8 @@
 name: Publish
 on:
-  pull_request:
+  push:
     branches:
       - master
-    types: [closed]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -79,3 +78,12 @@ jobs:
           registry: registry.online.ntnu.no
           tag_names: true
           workdir: ./database
+      #Run AWS Codepipeline
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+      - name: Run Codepipeline
+        run: aws codepipeline start-pipeline-execution --name BookingPipeline
