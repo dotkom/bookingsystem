@@ -87,4 +87,3 @@ jobs:
           aws-region: eu-west-1
       - name: Run Codepipeline
         run: aws codepipeline start-pipeline-execution --name BookingPipeline
-¨
