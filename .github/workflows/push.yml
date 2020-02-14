@@ -1,0 +1,36 @@
+name: Push
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      #Required to send data to github
+      - uses: actions/checkout@v1
+      #Installing Deps
+      - name: Deps for Backend
+        working-directory: ./backend
+        run: npm install
+      - name: Deps for Frontend
+        working-directory: ./frontend
+        run: npm install
+      #Linting Code
+      - name: Linting Backend
+        working-directory: ./backend
+        run: npm run lint
+      - name: Linting Frontend
+        working-directory: ./frontend
+        run: npm run lint
+      #Compiling Code
+      - name: Compile Backend
+        working-directory: ./backend
+        run: npm run-script build
+      - name: Compile Frontend
+        working-directory: ./frontend
+        run: npm run-script build
+      #Running Tests
+      - name: Testing backend
+        working-directory: ./backend
+        run: npm test
+      - name: Testing frontend
+        working-directory: ./frontend
+        run: npm run test:unit
