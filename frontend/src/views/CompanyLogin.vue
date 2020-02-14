@@ -1,7 +1,7 @@
 <template>
-  <div class="companyLogin">
+  <div :class="$style.companyLogin">
     <Header />
-    <div class="__content">
+    <div :class="$style.__content">
       <h2>
         Fin overskrift
       </h2>
@@ -33,12 +33,7 @@ export default Vue.extend({
     Button
   },
   methods: {
-    updateAdmissionCode(event: any) {
-      this.$store.dispatch(
-        "SET_ADMISSION_CODE",
-        (event.target as HTMLInputElement).value as string
-      );
-    },
+    updateAdmissionCode(event: any) {},
     btnClicked() {
       //button was clicked, do something
     }
@@ -46,7 +41,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .companyLogin {
   display: flex;
   flex-direction: column;

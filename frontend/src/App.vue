@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div :class="$style.app">
     <CompanyLogin />
   </div>
 </template>
@@ -14,7 +14,18 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import "@/sass/layout.scss";
-@include layout;
+<style lang="scss" module>
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  height: 100vh;
+}
 </style>
