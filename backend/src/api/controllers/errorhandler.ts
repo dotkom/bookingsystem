@@ -10,7 +10,6 @@ export const formidableErrorHandler = async (
 ): Promise<void> => {
   if (isformidableError(err)) {
     res.status(400).json({
-      status: 'error',
       statusCode: 400,
       payload: { status: 'Invalid JSON' },
     });

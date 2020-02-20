@@ -1,0 +1,1 @@
+docker exec -it bookingsystem_db psql -h localhost -p 5432 -U postgres booking_dev
