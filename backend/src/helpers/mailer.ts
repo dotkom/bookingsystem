@@ -4,9 +4,7 @@ import { ErrorHandler } from './error';
 import { validEmail } from '../utils/validators';
 import Mail from 'nodemailer/lib/mailer';
 
-const createTransporter = async (): Promise<null | ReturnType<
-  typeof nodemailer.createTransport
->> => {
+const createTransporter = async (): Promise<null | ReturnType<typeof nodemailer.createTransport>> => {
   const transporter = nodemailer.createTransport({
     pool: true,
     host: 'smtp.gmail.com',
@@ -23,24 +21,19 @@ const createTransporter = async (): Promise<null | ReturnType<
     await transporter.verify();
     return transporter;
   } catch (err) {
-    throw new ErrorHandler(500, { status: 'Mailer Error' });
+    throw new ErrorHandler(500, { type: 'Mailer Error' });
   }
 };
 
 const checkEmails = (emailadressses: string[]) => {
   emailadressses.forEach(email => {
     if (!validEmail(email)) {
-      throw new ErrorHandler(400, { status: 'Validation Error' });
+      throw new ErrorHandler(400, { type: 'Validation Error' });
     }
   });
 };
 
-export const sendMail = async (
-  list: Array<string>,
-  replier: string,
-  subject: string,
-  email: string,
-) => {
+export const sendMail = async (list: Array<string>, replier: string, subject: string, email: string) => {
   checkEmails([...list, replier]);
   const mailOptions = {
     from: process.env.SENDER,
@@ -54,6 +47,6 @@ export const sendMail = async (
   try {
     const info = await transporter.sendMail(mailOptions);
   } catch (err) {
-    throw new ErrorHandler(500, { status: 'Mail Error' });
+    throw new ErrorHandler(500, { type: 'Mail Error' });
   }
 };

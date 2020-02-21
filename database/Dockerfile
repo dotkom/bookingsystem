@@ -1,4 +1,4 @@
-FROM postgres:alpine
+FROM postgres:12-alpine
 ENV POSTGRES_DB booking_dev
 ENV POSTGRES_USER postgres
 ENV POSTGRES_PASSWORD password

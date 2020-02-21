@@ -2,19 +2,13 @@ import fs from 'fs';
 import { createLogger, format, transports } from 'winston';
 const { printf } = format;
 
-const standardFormat = printf(
-  ({ level, message, service, timestamp }) => {
-    return `${timestamp} ${service} ${level}: ${message}`;
-  },
-);
+const standardFormat = printf(({ level, message, service, timestamp }) => {
+  return `${timestamp} ${service} ${level}: ${message}`;
+});
 
-const errorFormat = printf(
-  ({ statusCode, service, timestamp, stack, payload }) => {
-    return `${timestamp} Service: ${service} Status: ${statusCode} Message:${JSON.stringify(
-      payload,
-    )} | ${stack}`;
-  },
-);
+const errorFormat = printf(({ statusCode, service, timestamp, stack, payload }) => {
+  return `${timestamp} Service: ${service} Status: ${statusCode} Message:${JSON.stringify(payload)} | ${stack}`;
+});
 
 const ignorePrivate = format((info, _opts) => {
   if (info.private) {

@@ -1,8 +1,8 @@
 import express from 'express';
 
 interface Payload {
-  status: string;
-  extra?: any;
+  type: string;
+  payload?: object;
 }
 
 export class ErrorHandler extends Error {
@@ -14,16 +14,9 @@ export class ErrorHandler extends Error {
     this.payload = payload;
   }
 }
-export const handleError = async ({
-  err,
-  res,
-}: {
-  err: ErrorHandler;
-  res: express.Response;
-}): Promise<void> => {
+export const handleError = async ({ err, res }: { err: ErrorHandler; res: express.Response }): Promise<void> => {
   const { statusCode, payload } = err;
   res.status(statusCode).json({
-    status: 'error',
     statusCode,
     payload,
   });
