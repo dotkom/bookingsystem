@@ -1,8 +1,8 @@
-import { corsOptions } from './config';
+import { corsOptions } from '../config';
 import express from 'express';
 import cors from 'cors';
 import formidableMiddleware from 'express-formidable';
-import { formidableErrorHandler, centralErrorHandler } from './controllers';
+import { formidableErrorHandler, centralErrorHandler } from '../services/error';
 import routes from './routes';
 
 const app: express.Application = express();
