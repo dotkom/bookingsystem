@@ -1,17 +1,17 @@
-import pg, { PoolConfig, QueryResultRow, Pool, PoolClient, Client } from 'pg';
+import { PoolConfig, QueryResultRow, Pool, PoolClient, Client } from 'pg';
 import { ErrorHandler } from './error';
+import { envConfig } from '../config';
 import { isClient, isPoolClient, isPool, parsePgError, PgError } from '../utils';
 import format from 'pg-format';
 
-require('dotenv').config();
-
 const pgconfig: PoolConfig = {
-  user: process.env.DBUSER,
-  database: process.env.DATABASENAME,
-  password: process.env.DBPASSWORD,
-  host: process.env.DBHOST,
-  port: Number(process.env.DBPORT),
+  user: envConfig.DBUSER,
+  database: envConfig.DATABASENAME,
+  password: envConfig.DBPASSWORD,
+  host: envConfig.DBHOST,
+  port: Number(envConfig.DBPORT),
 };
+
 const pool = new Pool(pgconfig);
 
 const hasConnection = async () => {
@@ -35,7 +35,7 @@ const disconnectClient = async (client: PoolClient | Client) => {
 const validateSQLStatement = async (sqlKeyword: string, sqlStatement: string): Promise<never | void> => {
   const isValidSqlStatement = sqlStatement.toLowerCase().includes(sqlKeyword);
   if (!isValidSqlStatement) {
-    throw new ErrorHandler(400, { type: 'Invalid SQL statment' });
+    throw new ErrorHandler(400, { status: 'Invalid SQL statment' });
   }
 };
 
@@ -221,7 +221,7 @@ export const getClient = async (connection: Client): Promise<Client> => {
     client = connection;
     return client as Client;
   } else {
-    throw new ErrorHandler(400, { type: 'Database Error' });
+    throw new ErrorHandler(400, { status: 'Database Error' });
   }
 };
 
@@ -231,7 +231,7 @@ export const getPoolClient = async (connection: Pool): Promise<PoolClient | neve
     client = await connection.connect();
     return client as PoolClient;
   } else {
-    throw new ErrorHandler(400, { type: 'Database Error' });
+    throw new ErrorHandler(400, { status: 'Database Error' });
   }
 };
 

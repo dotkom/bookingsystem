@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-require('dotenv').config();
+import { envConfig } from '../config';
 import { ErrorHandler } from './error';
 import { validEmail } from '../utils/validators';
 import Mail from 'nodemailer/lib/mailer';
@@ -12,23 +12,23 @@ const createTransporter = async (): Promise<null | ReturnType<typeof nodemailer.
     secure: true,
     auth: {
       type: 'OAuth2',
-      user: process.env.SENDER,
-      serviceClient: process.env.EMAILSERVICECLIENT,
-      privateKey: process.env.EMAILPRIVATEKEY,
+      user: envConfig.SENDER,
+      serviceClient: envConfig.EMAILSERVICECLIENT,
+      privateKey: envConfig.EMAILPRIVATEKEY,
     },
   });
   try {
     await transporter.verify();
     return transporter;
   } catch (err) {
-    throw new ErrorHandler(500, { type: 'Mailer Error' });
+    throw new ErrorHandler(500, { status: 'Mailer Error' });
   }
 };
 
 const checkEmails = (emailadressses: string[]) => {
   emailadressses.forEach(email => {
     if (!validEmail(email)) {
-      throw new ErrorHandler(400, { type: 'Validation Error' });
+      throw new ErrorHandler(400, { status: 'Validation Error' });
     }
   });
 };
@@ -36,8 +36,8 @@ const checkEmails = (emailadressses: string[]) => {
 export const sendMail = async (list: Array<string>, replier: string, subject: string, email: string) => {
   checkEmails([...list, replier]);
   const mailOptions = {
-    from: process.env.SENDER,
-    to: process.env.SENDER,
+    from: envConfig.SENDER,
+    to: envConfig.SENDER,
     bcc: list.join(),
     replyTo: replier,
     subject: subject,
@@ -47,6 +47,6 @@ export const sendMail = async (list: Array<string>, replier: string, subject: st
   try {
     const info = await transporter.sendMail(mailOptions);
   } catch (err) {
-    throw new ErrorHandler(500, { type: 'Mail Error' });
+    throw new ErrorHandler(500, { status: 'Mail Error' });
   }
 };

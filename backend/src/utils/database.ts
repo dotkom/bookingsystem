@@ -1,5 +1,5 @@
 import { PoolClient, QueryResultRow, Pool, Client } from 'pg';
-import { ErrorHandler } from '../helpers/error';
+import { ErrorHandler } from '../services/error';
 import { errorCodes } from './databaseErrorCode';
 export interface PgError extends Error {
   message: string;
@@ -65,13 +65,13 @@ export const parsePgError = async (err: PgError, sqlStatement?: string): Promise
       output.sql = sqlStatement.substring(start, end);
     }
   } catch (e) {
-    throw new ErrorHandler(500, { type: 'Internal Error' });
+    throw new ErrorHandler(500, { status: 'Internal Error' });
   }
   if (err.code === undefined && err.position === undefined) {
-    throw new ErrorHandler(400, { type: `Unknown error` });
+    throw new ErrorHandler(400, { status: `Unknown error` });
   } else {
     throw new ErrorHandler(400, {
-      type: 'database error',
+      status: 'database error',
       payload: output,
     });
   }

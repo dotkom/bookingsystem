@@ -1,5 +1,5 @@
 import express from 'express';
-import { ErrorHandler } from '../helpers/error';
+import { ErrorHandler } from '../services/error';
 import { Fields } from 'formidable';
 
 export const extractPayload = async (payload: express.Request): Promise<never | Fields | undefined> => {
@@ -8,10 +8,10 @@ export const extractPayload = async (payload: express.Request): Promise<never | 
     if (isPayload) {
       return payload.fields as Fields;
     } else {
-      throw new ErrorHandler(400, { type: 'No Payload' });
+      throw new ErrorHandler(400, { status: 'No Payload' });
     }
   } catch (e) {
-    throw new ErrorHandler(400, { type: 'No Payload' });
+    throw new ErrorHandler(400, { status: 'No Payload' });
   }
 };
 
