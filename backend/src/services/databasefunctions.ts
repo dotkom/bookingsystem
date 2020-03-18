@@ -1,7 +1,7 @@
 import { PoolConfig, QueryResultRow, Pool, PoolClient, Client } from 'pg';
 import { ErrorHandler } from './error';
 import { envConfig } from '../config';
-import { isClient, isPoolClient, isPool, parsePgError, PgError, Query } from '../utils';
+import { isClient, isPoolClient, isPool, parsePgError, PgError, Query, validateSQLStatement } from '../utils';
 import format from 'pg-format';
 import { logger } from './logger';
 
@@ -33,12 +33,6 @@ const disconnectClient = async (client: PoolClient | Client) => {
   }
 };
 
-const validateSQLStatement = async (sqlKeyword: string, sqlStatement: string): Promise<never | void> => {
-  const isValidSqlStatement = sqlStatement.toLowerCase().includes(sqlKeyword);
-  if (!isValidSqlStatement) {
-    throw new ErrorHandler(400, { status: 'Invalid SQL statment' });
-  }
-};
 export const formatSqlStatement = async (query: Query): Promise<Query> => {
   const { sqlStatement, data } = query;
   const literals = ['%%', '%I', '%L', '%s'];
@@ -58,12 +52,19 @@ const executeQuery = async (
   sqlStatement: string,
   client: PoolClient | Client,
   data: string[] = [],
+  secret = false,
 ): Promise<QueryResultRow | void> => {
   await hasConnection();
   let query: Query = { sqlStatement: sqlStatement, data: data };
   query = await formatSqlStatement(query);
   try {
     const res = data ? await client.query(query.sqlStatement, query.data) : await client.query(sqlStatement);
+    logger.log({
+      private: secret,
+      level: 'debug',
+      message: `Database quried with ${sqlStatement} and data ${data}`,
+    });
+
     return res;
   } catch (e) {
     if (e instanceof ErrorHandler) {
@@ -83,6 +84,7 @@ const executeQuery = async (
 export const executeTransaction = async (
   actions: Array<Query>,
   client: PoolClient | Client,
+  secret = false,
 ): Promise<Array<any> | never> => {
   logger.debug(`Running transactions  ${actions.map(a => a.sqlStatement)}`);
   actions = await Promise.all(actions.map(async action => await formatSqlStatement(action)));
@@ -104,6 +106,11 @@ export const executeTransaction = async (
       const { sqlStatement, data } = action;
       try {
         await (client as PoolClient | Client).query(sqlStatement, data);
+        logger.log({
+          private: secret,
+          level: 'debug',
+          message: `Database quried with ${sqlStatement} and data ${data}`,
+        });
       } catch (error) {
         await shouldAbort(error);
       }
