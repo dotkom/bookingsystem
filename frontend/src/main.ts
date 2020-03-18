@@ -7,9 +7,9 @@ import * as Integrations from "@sentry/integrations";
 
 Vue.config.productionTip = false;
 
-const DNS = process.env.VUE_APP_DNS || "";
+const SENTRY_DNS = process.env.VUE_APP_SENTRY_DNS || "";
 Sentry.init({
-  dsn: DNS,
+  dsn: SENTRY_DNS,
   integrations: [new Integrations.Vue({ Vue, attachProps: true })]
 });
 new Vue({
