@@ -1,5 +1,6 @@
 import express, { NextFunction } from 'express';
 import { isformidableError } from '../utils';
+import { logger } from './logger';
 
 interface Payload {
   status: string;
@@ -17,6 +18,7 @@ export class ErrorHandler extends Error {
 }
 export const handleError = async ({ err, res }: { err: ErrorHandler; res: express.Response }): Promise<void> => {
   const { statusCode, payload } = err;
+  logger.error(err);
   res.status(statusCode).json({
     status: 'error',
     statusCode,

@@ -36,12 +36,7 @@ const disconnectClient = async (client: PoolClient | Client) => {
 export const formatSqlStatement = async (query: Query): Promise<Query> => {
   const { sqlStatement, data } = query;
   const literals = ['%%', '%I', '%L', '%s'];
-  let shouldFormat = false;
-  for (const literal of literals) {
-    if (sqlStatement.includes(literal)) {
-      shouldFormat = true;
-    }
-  }
+  const shouldFormat = literals.map(literal => sqlStatement.includes(literal)).some(bool => bool);
   if (shouldFormat) {
     return { sqlStatement: format.withArray(sqlStatement, data), data: [] };
   }
@@ -51,8 +46,8 @@ export const formatSqlStatement = async (query: Query): Promise<Query> => {
 const executeQuery = async (
   sqlStatement: string,
   client: PoolClient | Client,
+  secret: boolean,
   data: string[] = [],
-  secret = false,
 ): Promise<QueryResultRow | void> => {
   await hasConnection();
   let query: Query = { sqlStatement: sqlStatement, data: data };
@@ -131,11 +126,12 @@ export const executeTransaction = async (
 export const createTable = async (
   sqlStatement: string,
   client: PoolClient | Client,
+  secret = false,
 ): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'create table';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement, client) as QueryResultRow;
+    return executeQuery(sqlStatement, client, secret) as QueryResultRow;
   } catch (err) {
     throw err;
   }
@@ -145,11 +141,12 @@ export const insertSingleRow = async (
   sqlStatement: string,
   data: string[] = [],
   client: PoolClient | Client,
+  secret = false,
 ): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'insert into';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement, client, data) as QueryResultRow;
+    return executeQuery(sqlStatement, client, secret, data) as QueryResultRow;
   } catch (err) {
     throw err;
   }
@@ -159,11 +156,12 @@ export const getRows = async (
   sqlStatement: string,
   data: string[] = [],
   client: PoolClient | Client,
+  secret = false,
 ): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'select';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement, client, data) as QueryResultRow;
+    return executeQuery(sqlStatement, client, secret, data) as QueryResultRow;
   } catch (err) {
     throw err;
   }
@@ -173,11 +171,12 @@ export const updateRow = async (
   sqlStatement: string,
   data: string[] = [],
   client: PoolClient | Client,
+  secret = false,
 ): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'update';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
-    return executeQuery(sqlStatement, client, data) as QueryResultRow;
+    return executeQuery(sqlStatement, client, secret, data) as QueryResultRow;
   } catch (e) {
     throw e;
   }
@@ -188,12 +187,13 @@ export const UpdateMultipleRows = async (
   data: string[][],
   client: PoolClient | Client,
   data2?: string[][],
+  secret = false,
 ): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'update';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
     const stat: string = data2 ? format(sqlStatement, data, data2) : format(sqlStatement, data);
-    return executeQuery(stat, client) as QueryResultRow;
+    return executeQuery(stat, client, secret) as QueryResultRow;
   } catch (e) {
     throw e;
   }
@@ -258,12 +258,16 @@ export const getPoolClient = async (connection: Pool): Promise<PoolClient | neve
   }
 };
 
-export const createRole = async (sqlStatement: string, data: string[] = []): Promise<QueryResultRow | never> => {
+export const createRole = async (
+  sqlStatement: string,
+  data: string[] = [],
+  secret = false,
+): Promise<QueryResultRow | never> => {
   const sqlKeyword = 'create role';
   try {
     await validateSQLStatement(sqlKeyword, sqlStatement);
     const client = await getPoolClient(pool);
-    return executeQuery(sqlStatement, client, data) as QueryResultRow;
+    return executeQuery(sqlStatement, client, secret, data) as QueryResultRow;
   } catch (err) {
     throw err;
   }
