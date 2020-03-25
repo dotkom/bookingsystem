@@ -1,7 +1,12 @@
 import express, { NextFunction } from 'express';
 import { extractPayload, Company, Query, CompanyUser, instanceOfCompany, instanceOfCompanyUser } from '../../utils';
 import { Fields } from 'formidable';
-import { genereateAdminConnection, getPoolClient, executeTransaction } from '../../services/databasefunctions';
+import {
+  genereateAdminConnection,
+  getPoolClient,
+  executeTransaction,
+  insertSingleRow,
+} from '../../services/databasefunctions';
 import { logger } from '../../services/logger';
 import { PoolClient, Pool } from 'pg';
 const app: express.Application = express();
@@ -15,21 +20,9 @@ const newCompany = async (req: express.Request, res: express.Response, next: Nex
       const pool: Pool = await genereateAdminConnection();
       const poolClient: PoolClient = await getPoolClient(pool);
       logger.info(`Tested Connection to db as Admin`);
-      const actions: Array<Query> = [
-        {
-          sqlStatement: 'INSERT INTO company(email,orgnum,username,salt,passhash,name) VALUES ($1,$2,$3,$4,$5,$6);',
-          data: [email, String(orgnum), username, salt, passhash, name],
-        },
-        {
-          sqlStatement: 'CREATE ROLE %I LOGIN INHERIT;',
-          data: [username],
-        },
-        {
-          sqlStatement: 'GRANT companies to %I;',
-          data: [username],
-        },
-      ];
-      await executeTransaction(actions, poolClient);
+      const sqlStatement = 'INSERT INTO company(email,orgnum,username,salt,passhash,name) VALUES ($1,$2,$3,$4,$5,$6);';
+      const data = [email, String(orgnum), username, salt, passhash, name];
+      await insertSingleRow(sqlStatement, data, poolClient, true);
       res.send({ status: 'success' });
     }
   } catch (error) {
