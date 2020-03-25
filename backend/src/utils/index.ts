@@ -14,6 +14,6 @@ export const extractPayload = async (payload: express.Request): Promise<never | 
     throw new ErrorHandler(400, { status: 'No Payload' });
   }
 };
-
+export * from './interfaces';
 export * from './database';
 export * from './validators';

@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["email", "username", "salt", "passhash", "givenname", "surename", "company"],
+
+  "definitions": {
+    "email": {
+      "type": "string",
+      "pattern": "[a-z0-9!#$%&'*+/=?^_‘{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_‘{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    }
+  },
+  "properties": {
+    "email": {
+      "$ref": "#/definitions/email"
+    },
+    "username": {
+      "type": "string"
+    },
+    "salt": {
+      "type": "string"
+    },
+    "passhash": {
+      "type": "string"
+    },
+    "givenname": {
+      "type": "string",
+      "maximum": 20
+    },
+    "surename": {
+      "type": "string",
+      "maximum": 20
+    },
+    "telephone": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99999999
+    },
+    "company": {
+      "type": "string"
+    }
+  }
+}
