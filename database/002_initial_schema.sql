@@ -228,7 +228,7 @@ CREATE POLICY offer_select_policy
 CREATE POLICY offer_update_policy
     ON offer
     FOR UPDATE
-    USING ((CID = get_CID_companyUser(current_user))  and statusCode in ('1', '2'))
+    USING (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
     WITH CHECK (statusCode in ('1', '2'))
 ;
 CREATE POLICY offer_ow_policy
@@ -252,7 +252,7 @@ CREATE POLICY wish_insert_policy
 CREATE POLICY wish_update_policy
     ON wish
     FOR UPDATE
-    USING (CUID = get_CUID_companyUser(current_user) or )
+    USING (CUID = get_CUID_companyUser(current_user) )
     WITH CHECK (CID = get_CID_companyUser(current_user) and CUID = get_CUID_companyUser(current_user))
 ;
 CREATE POLICY wish_ow_policy
@@ -266,7 +266,7 @@ CREATE POLICY wish_ow_policy
 CREATE POLICY ad_insert_policy
     ON ad
     FOR INSERT
-    WITH CHECK ((CID = get_CID_companyUser(current_user)) and statusCode in ('1', '2'))
+    WITH CHECK (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
 ;
 CREATE POLICY ad_update_policy
     ON ad
