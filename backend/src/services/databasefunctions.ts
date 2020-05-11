@@ -11,7 +11,6 @@ const pgconfig: PoolConfig = {
   host: envConfig.DBHOST,
   port: Number(envConfig.DBPORT),
 };
-
 const pool = new Pool(pgconfig);
 
 const hasConnection = async () => {
