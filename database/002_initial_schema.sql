@@ -25,9 +25,6 @@ IF NOT EXISTS public.company(
     CID SERIAL PRIMARY KEY,
     email citext UNIQUE NOT NULL,
     orgNum bigint UNIQUE NOT NULL,
-    username text UNIQUE NOT NULL ,
-    salt text NOT NULL ,
-    passhash varchar NOT NULL ,
     name text  NOT NULL
 );
 
@@ -36,9 +33,8 @@ CREATE TABLE
 IF NOT EXISTS public.companyuser(
     CUID SERIAL PRIMARY KEY,
     email citext UNIQUE,
-    telephone text NOT NULL,
-    username text NOT NULL,
-    salt text NOT NULL,
+    telephone text,
+    username text UNIQUE NOT NULL,
     passhash varchar NOT NULL ,
     givenname text  NOT NULL,
     surename text  NOT NULL,
@@ -186,11 +182,6 @@ CREATE POLICY companyUser_update_policy
     USING (username = current_user)
     WITH CHECK (username = current_user)
 ;
-CREATE POLICY companyUser_insert_policy
-    ON companyuser
-    FOR INSERT
-    WITH CHECK(CID = get_CID_companyUser(current_user))
-;
 CREATE POLICY companyUser_ow_policy
     ON companyuser
     FOR All
@@ -253,7 +244,7 @@ CREATE POLICY wish_insert_policy
 CREATE POLICY wish_update_policy
     ON wish
     FOR UPDATE
-    USING (CUID = get_CUID_companyUser(current_user) )
+    USING (CUID = get_CUID_companyUser(current_user))
     WITH CHECK (CID = get_CID_companyUser(current_user) and CUID = get_CUID_companyUser(current_user))
 ;
 CREATE POLICY wish_ow_policy
@@ -278,7 +269,7 @@ CREATE POLICY ad_update_policy
 CREATE POLICY ad_select_policy
     ON ad
     FOR SELECT
-    USING (CID = get_CID_companyUser(current_user) )
+    USING (CID = get_CID_companyUser(current_user))
 ;
 CREATE POLICY ad_ow_policy
     ON ad
@@ -336,7 +327,7 @@ CREATE POLICY contracts_update_policy
 CREATE POLICY contracts_select_policy
     ON contracts
     FOR SELECT
-    USING (CID = get_CID_companyUser(current_user) )
+    USING (CID = get_CID_companyUser(current_user))
 ;
 CREATE POLICY contracts_ow_policy
     ON contracts
@@ -350,12 +341,12 @@ CREATE POLICY contracts_ow_policy
 CREATE POLICY queue_insert_policy
     ON queue
     FOR INSERT
-    WITH CHECK (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
+    WITH CHECK CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
 ;
 CREATE POLICY queue_select_policy
     ON queue
     FOR SELECT
-    USING (CID = get_CID_companyUser(current_user) )
+    USING (CID = get_CID_companyUser(current_user))
 ;
 CREATE POLICY queue_ow_policy
     ON queue
@@ -385,16 +376,16 @@ GRANT CONNECT ON DATABASE booking_dev TO companyUsers,onlineUsers;
 
 -- company
 --PS NO Insert on company and companyUsers because they will always added with a role by the admins. -.-' 
-GRANT SELECT (CID,email,username, name,orgNum) ON TABLE company TO companyUsers,onlineUsers;
+GRANT SELECT (CID,email,name,orgNum) ON TABLE company TO companyUsers,onlineUsers;
 GRANT DELETE ON TABLE company TO onlineUsers;
 GRANT INSERT ON TABLE company TO onlineUsers;
-GRANT UPDATE (email,username,passhash) ON TABLE company TO companyUsers;
-GRANT USAGE, SELECT ON SEQUENCE company_cid_seq TO companyUsers;
+GRANT UPDATE (email,name) ON TABLE company TO onlineUsers;
+GRANT USAGE, SELECT ON SEQUENCE company_cid_seq TO onlineUsers;
 
 --companyUsers
 GRANT SELECT (CUID,email,telephone,username,givenname, surename,CID) ON companyUser TO companyUsers,onlineUsers;
 GRANT UPDATE ON TABLE companyUser TO companyUsers;
-GRANT USAGE, SELECT ON SEQUENCE companyuser_cuid_seq TO companyUsers;
+GRANT USAGE, SELECT ON SEQUENCE companyuser_cuid_seq TO onlineUsers;
 
 --Event
 GRANT SELECT ON TABLE event TO onlineUsers;
@@ -414,7 +405,7 @@ GRANT USAGE, SELECT ON SEQUENCE offer_ofid_seq TO onlineUsers;
 GRANT SELECT ON TABLE wish TO companyUsers,onlineUsers;
 GRANT UPDATE (statusCode,data) ON TABLE wish TO companyUsers,onlineUsers;
 GRANT INSERT (EID,CID,CUID,statusCode,data) ON TABLE wish TO companyUsers,onlineUsers;
-GRANT USAGE, SELECT ON SEQUENCE wish_wid_seq TO companyUsers;
+GRANT USAGE, SELECT ON SEQUENCE wish_wid_seq TO companyUsers,onlineUsers;
 
 --Ads
 GRANT SELECT ON TABLE ad TO companyUsers,onlineUsers;
@@ -424,13 +415,13 @@ GRANT UPDATE(statusCode) ON TABLE ad TO companyUsers,onlineUsers;
 --bookingevent
 GRANT SELECT ON TABLE bookingevent TO companyUsers,onlineUsers;
 GRANT INSERT ON TABLE bookingevent TO onlineUsers;
-GRANT UPDATE(data) ON TABLE bookingevent TO companyUsers;
+GRANT UPDATE(data) ON TABLE bookingevent TO companyUsers,onlineUsers;
 GRANT UPDATE(statusCode,data) ON TABLE bookingevent TO onlineUsers;
 
 --itex
 GRANT SELECT ON TABLE itex TO companyUsers,onlineUsers;
 GRANT INSERT ON TABLE itex TO onlineUsers;
-GRANT UPDATE(data) ON TABLE bookingevent TO companyUsers;
+GRANT UPDATE(data) ON TABLE bookingevent TO companyUsers,onlineUsers;
 GRANT UPDATE(statusCode,data) ON TABLE bookingevent TO onlineUsers;
 
 --Contracts

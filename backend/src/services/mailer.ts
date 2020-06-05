@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { SentMessageInfo } from 'nodemailer';
 import { envConfig } from '../config';
 import { ErrorHandler } from './error';
 import { validEmail } from '../utils/validators';
@@ -25,7 +25,7 @@ const createTransporter = async (): Promise<null | ReturnType<typeof nodemailer.
   }
 };
 
-const checkEmails = (emailadressses: string[]) => {
+const checkEmails = (emailadressses: string[]): never | void => {
   emailadressses.forEach(email => {
     if (!validEmail(email)) {
       throw new ErrorHandler(400, { status: 'Validation Error' });
@@ -33,7 +33,12 @@ const checkEmails = (emailadressses: string[]) => {
   });
 };
 
-export const sendMail = async (list: Array<string>, replier: string, subject: string, email: string) => {
+export const sendMail = async (
+  list: Array<string>,
+  replier: string,
+  subject: string,
+  email: string,
+): Promise<never | SentMessageInfo> => {
   checkEmails([...list, replier]);
   const mailOptions = {
     from: envConfig.SENDER,
@@ -46,6 +51,7 @@ export const sendMail = async (list: Array<string>, replier: string, subject: st
   const transporter = (await createTransporter()) as Mail;
   try {
     const info = await transporter.sendMail(mailOptions);
+    return info;
   } catch (err) {
     throw new ErrorHandler(500, { status: 'Mail Error' });
   }

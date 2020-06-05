@@ -1,12 +1,12 @@
 import express from 'express';
 import { ErrorHandler } from '../services/error';
-import { Fields } from 'formidable';
-
-export const extractPayload = async (payload: express.Request): Promise<never | Fields | undefined> => {
+export const extractPayload = async (
+  payload: express.Request,
+): Promise<never | Record<string, string | number | boolean>> => {
   try {
-    const isPayload = payload.fields !== undefined;
+    const isPayload = payload.body !== undefined;
     if (isPayload) {
-      return payload.fields as Fields;
+      return payload.body as Record<string, string | number | boolean>;
     } else {
       throw new ErrorHandler(400, { status: 'No Payload' });
     }

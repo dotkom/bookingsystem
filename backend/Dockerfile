@@ -1,5 +1,5 @@
 # --- Installing stage
-FROM node:lts-alpine AS installer
+FROM node:lts AS installer
 
 WORKDIR /usr/src/app
 

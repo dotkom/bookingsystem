@@ -10,7 +10,7 @@ const errorFormat = printf(({ statusCode, service, timestamp, stack, payload }) 
   return `${timestamp} Service: ${service} Status: ${statusCode} Message:${JSON.stringify(payload)} | ${stack}`;
 });
 
-const ignorePrivate = format((info, _opts) => {
+const ignorePrivate = format(info => {
   if (info.private) {
     return false;
   }
