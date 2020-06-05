@@ -37,12 +37,12 @@ export const isPoolClient = (connection: Pool | Client | PoolClient): connection
 };
 export const parsePgError = async (err: PgError, sqlStatement?: string): Promise<never> => {
   const { message, code, severity, position, constraint } = err;
-  const output = {} as any;
+  const output = {} as PgError;
   try {
     if (message !== undefined) {
       output.message = message;
     }
-    output.errorcode = errorCodes[code];
+    output.code = errorCodes[code];
     output.severity = severity;
     if (position !== undefined) {
       output.position = position;
@@ -62,7 +62,7 @@ export const parsePgError = async (err: PgError, sqlStatement?: string): Promise
       if (pos - 2 <= 1) {
         start = 0;
       }
-      output.sql = sqlStatement.substring(start, end);
+      output.internalQuery = sqlStatement.substring(start, end);
     }
   } catch (e) {
     throw new ErrorHandler(500, { status: 'Internal Error' });
