@@ -2,8 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "additionalProperties": false,
-  "required": ["email", "username", "salt", "passhash", "givenname", "surename", "company"],
-
+  "required": ["email", "username", "password", "givenname", "surename", "company"],
   "definitions": {
     "email": {
       "type": "string",
@@ -17,10 +16,7 @@
     "username": {
       "type": "string"
     },
-    "salt": {
-      "type": "string"
-    },
-    "passhash": {
+    "password": {
       "type": "string"
     },
     "givenname": {

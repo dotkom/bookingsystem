@@ -2,16 +2,10 @@
 
 ## HOW TO
 
-### Run with Docker (Used for production)
+### Run with docker-compose (Used for development)
 
-works out of the box, docker-compose up
+Add .env file in backend/config
 
-### Run with npm (Used for development)
+GOTO root
 
-GOTO ./database run script ./run_database.sh
-
-GOTO ../backend
-
-run npm install
-
-run npm run start:dev
+docker-compose up --build

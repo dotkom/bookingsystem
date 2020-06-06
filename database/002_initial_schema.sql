@@ -25,9 +25,6 @@ IF NOT EXISTS public.company(
     CID SERIAL PRIMARY KEY,
     email citext UNIQUE NOT NULL,
     orgNum bigint UNIQUE NOT NULL,
-    username text UNIQUE NOT NULL ,
-    salt text NOT NULL ,
-    passhash varchar NOT NULL ,
     name text  NOT NULL
 );
 
@@ -36,9 +33,8 @@ CREATE TABLE
 IF NOT EXISTS public.companyuser(
     CUID SERIAL PRIMARY KEY,
     email citext UNIQUE,
-    telephone text NOT NULL,
-    username text NOT NULL,
-    salt text NOT NULL,
+    telephone text,
+    username text UNIQUE NOT NULL,
     passhash varchar NOT NULL ,
     givenname text  NOT NULL,
     surename text  NOT NULL,
@@ -48,8 +44,7 @@ IF NOT EXISTS public.companyuser(
 --OWUser
 CREATE TABLE
 IF NOT EXISTS public.onlineuser(
-    OID SERIAL PRIMARY KEY,
-    JWT varchar NOT NULL,
+    OID INTEGER PRIMARY KEY,
     companies int[]
 );
 
@@ -171,7 +166,6 @@ CREATE FUNCTION get_CUID_companyUser(luser text) RETURNS INTEGER AS $$
 -- Groups 
 
 CREATE GROUP companyUsers WITH NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT;
-CREATE GROUP onlineUsers WITH NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT;
 
 
 -- companyUser_policy
@@ -186,18 +180,7 @@ CREATE POLICY companyUser_update_policy
     USING (username = current_user)
     WITH CHECK (username = current_user)
 ;
-CREATE POLICY companyUser_insert_policy
-    ON companyuser
-    FOR INSERT
-    WITH CHECK(CID = get_CID_companyUser(current_user))
-;
-CREATE POLICY companyUser_ow_policy
-    ON companyuser
-    FOR All
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK(TRUE)
-;
+
 -- company_policy
 CREATE POLICY company_select_policy
     ON company
@@ -205,21 +188,6 @@ CREATE POLICY company_select_policy
     USING (CID = get_CID_companyUser(current_user))
 ;
 
-CREATE POLICY company_ow_policy
-    ON company
-    FOR All
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK(TRUE)
-;
---Event
-CREATE POLICY event_ow_policy
-    ON event
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
-;
 -- offer_policy
 CREATE POLICY offer_select_policy
     ON offer
@@ -232,13 +200,6 @@ CREATE POLICY offer_update_policy
     USING (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
     WITH CHECK (statusCode in ('1', '2'))
 ;
-CREATE POLICY offer_ow_policy
-    ON offer
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK(TRUE)
-;
 -- wish_policy
 CREATE POLICY wish_select_policy
     ON wish
@@ -248,45 +209,33 @@ CREATE POLICY wish_select_policy
 CREATE POLICY wish_insert_policy
     ON wish
     FOR INSERT
-    WITH CHECK (CID = get_CID_companyUser(current_user) and CUID = get_CUID_companyUser(current_user))
+    WITH CHECK ((CID = get_CID_companyUser(current_user) and CUID = get_CUID_companyUser(current_user)))
 ;
 CREATE POLICY wish_update_policy
     ON wish
     FOR UPDATE
-    USING (CUID = get_CUID_companyUser(current_user) )
+    USING (CUID = get_CUID_companyUser(current_user))
     WITH CHECK (CID = get_CID_companyUser(current_user) and CUID = get_CUID_companyUser(current_user))
 ;
-CREATE POLICY wish_ow_policy
-    ON wish
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
-;
+
 --Ads 
 CREATE POLICY ad_insert_policy
     ON ad
     FOR INSERT
-    WITH CHECK (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
+    WITH CHECK ((CID = get_CID_companyUser(current_user)) and statusCode in ('1', '2'))
 ;
 CREATE POLICY ad_update_policy
     ON ad
     FOR UPDATE
     USING (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
-    WITH CHECK (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
+    WITH CHECK ((CID = get_CID_companyUser(current_user)) and statusCode in ('1', '2'))
 ;
 CREATE POLICY ad_select_policy
     ON ad
     FOR SELECT
-    USING (CID = get_CID_companyUser(current_user) )
+    USING (CID = get_CID_companyUser(current_user))
 ;
-CREATE POLICY ad_ow_policy
-    ON ad
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
-;
+
 --bookingevent
 CREATE POLICY bookingevent_update_policy
     ON bookingevent
@@ -299,13 +248,7 @@ CREATE POLICY bookingevent_select_policy
     FOR SELECT
     USING (statusCode in ('1', '2'))
 ;
-CREATE POLICY bookingevent_ow_policy
-    ON bookingevent
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
-;
+
 --itex
 CREATE POLICY itex_update_policy
     ON itex
@@ -318,33 +261,21 @@ CREATE POLICY itex_select_policy
     FOR SELECT
     USING (statusCode in ('1', '2'))
 ;
-CREATE POLICY itex_ow_policy
-    ON itex
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
-;
+
 --Contracts
 
 CREATE POLICY contracts_update_policy
     ON contracts
     FOR UPDATE
-    USING (CID = get_CID_companyUser(current_user) and statusCode in ('1', '2'))
+    USING ((CID = get_CID_companyUser(current_user)) and statusCode in ('1', '2'))
     WITH CHECK (statusCode in ('1', '2'))
 ;
 CREATE POLICY contracts_select_policy
     ON contracts
     FOR SELECT
-    USING (CID = get_CID_companyUser(current_user) )
+    USING (CID = get_CID_companyUser(current_user))
 ;
-CREATE POLICY contracts_ow_policy
-    ON contracts
-    FOR ALL
-    TO onlineUsers
-    USING(TRUE)
-    WITH CHECK(TRUE)
-;
+
 -- Queue
 
 CREATE POLICY queue_insert_policy
@@ -355,100 +286,61 @@ CREATE POLICY queue_insert_policy
 CREATE POLICY queue_select_policy
     ON queue
     FOR SELECT
-    USING (CID = get_CID_companyUser(current_user) )
-;
-CREATE POLICY queue_ow_policy
-    ON queue
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
+    USING (CID = get_CID_companyUser(current_user))
 ;
 
--- Signatures
-
-CREATE POLICY signatures_ow_policy
-    ON signatures
-    FOR ALL
-    TO onlineUsers
-    USING (TRUE)
-    WITH CHECK (TRUE)
-;
 
 -- Policies for views
 
 --Grant | Saying which columns you can access
 
 --- config
-GRANT CONNECT ON DATABASE booking_dev TO companyUsers,onlineUsers;
+GRANT CONNECT ON DATABASE booking_dev TO companyUsers;
 
 
 -- company
 --PS NO Insert on company and companyUsers because they will always added with a role by the admins. -.-' 
-GRANT SELECT (CID,email,username, name,orgNum) ON TABLE company TO companyUsers,onlineUsers;
-GRANT DELETE ON TABLE company TO onlineUsers;
-GRANT INSERT ON TABLE company TO onlineUsers;
-GRANT UPDATE (email,username,passhash) ON TABLE company TO companyUsers;
-GRANT USAGE, SELECT ON SEQUENCE company_cid_seq TO companyUsers;
+GRANT SELECT (CID,email,name,orgNum) ON TABLE company TO companyUsers;
 
 --companyUsers
-GRANT SELECT (CUID,email,telephone,username,givenname, surename,CID) ON companyUser TO companyUsers,onlineUsers;
+GRANT SELECT (CUID,email,telephone,username,givenname, surename,CID) ON companyUser TO companyUsers;
 GRANT UPDATE ON TABLE companyUser TO companyUsers;
-GRANT USAGE, SELECT ON SEQUENCE companyuser_cuid_seq TO companyUsers;
 
 --Event
-GRANT SELECT ON TABLE event TO onlineUsers;
-GRANT INSERT(statusCode) ON TABLE event TO onlineUsers;
-GRANT UPDATE(statusCode) ON TABLE event TO onlineUsers;
-GRANT USAGE, SELECT ON SEQUENCE event_eid_seq TO companyUsers,onlineUsers;
+GRANT USAGE, SELECT ON SEQUENCE event_eid_seq TO companyUsers;
 
 
 -- Offer
-GRANT SELECT (EID,OID,statusCode,data) ON TABLE offer TO companyUsers,onlineUsers;
-GRANT DELETE ON TABLE offer TO onlineUsers;
-GRANT UPDATE (statusCode,data) ON TABLE offer TO companyUsers,onlineUsers;
-GRANT INSERT (EID,CID,OID,statusCode,data) ON TABLE offer TO onlineUsers;
-GRANT USAGE, SELECT ON SEQUENCE offer_ofid_seq TO onlineUsers;
+GRANT SELECT (EID,OID,statusCode,data) ON TABLE offer TO companyUsers;
+GRANT UPDATE (statusCode,data) ON TABLE offer TO companyUsers;
 
 -- Wish
-GRANT SELECT ON TABLE wish TO companyUsers,onlineUsers;
-GRANT UPDATE (statusCode,data) ON TABLE wish TO companyUsers,onlineUsers;
-GRANT INSERT (EID,CID,CUID,statusCode,data) ON TABLE wish TO companyUsers,onlineUsers;
+GRANT SELECT ON TABLE wish TO companyUsers;
+GRANT UPDATE (statusCode,data) ON TABLE wish TO companyUsers;
+GRANT INSERT (EID,CID,CUID,statusCode,data) ON TABLE wish TO companyUsers;
 GRANT USAGE, SELECT ON SEQUENCE wish_wid_seq TO companyUsers;
 
 --Ads
-GRANT SELECT ON TABLE ad TO companyUsers,onlineUsers;
-GRANT INSERT ON TABLE ad TO companyUsers,onlineUsers;
-GRANT UPDATE(statusCode) ON TABLE ad TO companyUsers,onlineUsers;
+GRANT SELECT ON TABLE ad TO companyUsers;
+GRANT INSERT ON TABLE ad TO companyUsers;
+GRANT UPDATE(statusCode) ON TABLE ad TO companyUsers;
 
 --bookingevent
-GRANT SELECT ON TABLE bookingevent TO companyUsers,onlineUsers;
-GRANT INSERT ON TABLE bookingevent TO onlineUsers;
+GRANT SELECT ON TABLE bookingevent TO companyUsers;
 GRANT UPDATE(data) ON TABLE bookingevent TO companyUsers;
-GRANT UPDATE(statusCode,data) ON TABLE bookingevent TO onlineUsers;
 
 --itex
-GRANT SELECT ON TABLE itex TO companyUsers,onlineUsers;
-GRANT INSERT ON TABLE itex TO onlineUsers;
+GRANT SELECT ON TABLE itex TO companyUsers;
 GRANT UPDATE(data) ON TABLE bookingevent TO companyUsers;
-GRANT UPDATE(statusCode,data) ON TABLE bookingevent TO onlineUsers;
 
 --Contracts
-GRANT SELECT ON TABLE contracts TO companyUsers,onlineUsers;
-GRANT INSERT ON TABLE contracts TO onlineUsers;
-GRANT UPDATE(price,statusCode,expirationDate,acceptDate) ON TABLE contracts TO companyUsers,onlineUsers;
-GRANT USAGE, SELECT ON SEQUENCE contracts_contractid_seq TO onlineUsers;
+GRANT SELECT ON TABLE contracts TO companyUsers;
+GRANT UPDATE(price,statusCode,expirationDate,acceptDate) ON TABLE contracts TO companyUsers;
 
 
 -- Queue
-GRANT SELECT ON TABLE queue TO companyUsers,onlineUsers;
-GRANT INSERT(statusCode,CID,EID) ON TABLE queue TO companyUsers,onlineUsers;
-GRANT UPDATE(statusCode) ON TABLE queue TO onlineUsers;
-GRANT USAGE, SELECT ON SEQUENCE queue_qid_seq TO companyUsers,onlineUsers;
+GRANT SELECT ON TABLE queue TO companyUsers;
+GRANT INSERT(statusCode,CID,EID) ON TABLE queue TO companyUsers;
+GRANT USAGE, SELECT ON SEQUENCE queue_qid_seq TO companyUsers;
 
--- Signatures
-GRANT SELECT ON TABLE signatures to onlineUsers;
-GRANT INSERT ON TABLE signatures to onlineUsers;
-GRANT UPDATE ON TABLE signatures to onlineUsers;
-GRANT USAGE, SELECT ON SEQUENCE signatures_sid_seq TO onlineUsers;
 
