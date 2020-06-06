@@ -1,1 +1,66 @@
-{}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sub",
+    "name",
+    "given_name",
+    "family_name",
+    "nickname",
+    "preferred_username",
+    "picture",
+    "member",
+    "staff",
+    "superuser",
+    "rfid",
+    "field_of_study",
+    "role",
+    "token"
+  ],
+  "properties": {
+    "sub": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "family_name": {
+      "type": "string"
+    },
+    "given_name": {
+      "type": "string"
+    },
+    "nickname": {
+      "type": "string"
+    },
+    "member": {
+      "type": "boolean"
+    },
+    "preferred_username": {
+      "type": "string"
+    },
+    "picture": {
+      "type": "string"
+    },
+    "staff": {
+      "type": "boolean"
+    },
+    "superuser": {
+      "type": "string"
+    },
+    "rfid": {
+      "type": "string"
+    },
+    "field_of_study": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "token": {
+      "type": "object",
+      "properties": { "accessToken": { "type": "string" }, "expiresAt": { "type": "integer" } }
+    }
+  }
+}
