@@ -11,7 +11,7 @@ import { disconnect } from 'cluster';
 
 chai.use(chaiAsPromised);
 
-describe('Database', function () {
+describe('Database', function() {
   describe('Format SQL', () => {
     const toBeFormated = [
       {
@@ -103,8 +103,6 @@ describe('Database', function () {
   });
 
   describe('Disconnect from DB', () => {
-
-
     describe('Gracefully Disconnect', () => {
       it('When a Client disconnects', async () => {
         const val = await dbf.disconnectClient(new pg.Client());
@@ -124,7 +122,6 @@ describe('Database', function () {
         expect(val).to.be.true;
       });
     });
-
   });
 
   describe('Query Execution', () => {
@@ -161,11 +158,10 @@ describe('Database', function () {
         const val = await dbf.executeTransaction(actions, PoolClient, false);
       });
     });
-    afterEach(sinon.restore)
+    afterEach(sinon.restore);
   });
 
   describe('Generate Connections', () => {
-
     describe('Client', () => {
       it('Should generate Client', async () => {
         const client = await dbf.generateClientConnection('endre', 'passord');
@@ -226,10 +222,10 @@ describe('Database', function () {
         expect(poolClient).to.be.a('object');
       });
     });
-    afterEach(sinon.restore)
+    afterEach(sinon.restore);
   });
 
-  describe('Check Connection/Client types', function () {
+  describe('Check Connection/Client types', function() {
     describe('isPool', () => {
       it('When recieving Pool', async () => {
         const Pool = new pg.Pool();

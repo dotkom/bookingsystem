@@ -11,7 +11,7 @@ import { newCompanyUser, newCompany } from '../api/routes/register';
 
 chai.use(chaiAsPromised);
 
-describe('Register', function () {
+describe('Register', function() {
   describe('New Company', () => {
     let payload: {
       email?: string | number | boolean | null;
@@ -29,7 +29,8 @@ describe('Register', function () {
     describe('Routes', () => {
       it('should return ok status', done => {
         request(app)
-          .post('/register/company').send(payload)
+          .post('/register/company')
+          .send(payload)
           .set('Content-Type', 'application/json')
           .set('Accept', 'application/json')
           .expect(200)
@@ -202,7 +203,10 @@ describe('Register', function () {
       sinon.stub(dbf, 'getAdminPoolClient').resolves();
       sinon.stub(dbf, 'executeTransaction').resolves(undefined);
       file = rewiremock.proxy(() => require('../api/routes/register'), {
-        '../../services/databasefunctions': { "executeTransaction": sinon.stub().resolves(), "getAdminPoolClient": sinon.stub().resolves() }
+        '../../services/databasefunctions': {
+          executeTransaction: sinon.stub().resolves(),
+          getAdminPoolClient: sinon.stub().resolves(),
+        },
       });
       payload = {
         email: 'endremau@gmail.com',
@@ -219,7 +223,8 @@ describe('Register', function () {
     describe('Routes', () => {
       it('should return error status', done => {
         request(app)
-          .post('/register/companyuser').send(payload)
+          .post('/register/companyuser')
+          .send(payload)
           .set('Content-Type', 'application/json')
           .set('Accept', 'application/json')
           .expect(200)
@@ -232,16 +237,12 @@ describe('Register', function () {
     //Unit tests
     describe('Functions correctly', () => {
       it('When a new companyrepresentative is registered correctly without telephone', async () => {
-
         const request = mocks.createRequest({
           method: 'POST',
           body: payload,
         });
-        await expect(file.newCompanyUser(request))
-
-
+        await expect(file.newCompanyUser(request));
       });
-
 
       it('When a new companyrepresentative is registered correctly with telephone', async () => {
         payload.telephone = 4209928;

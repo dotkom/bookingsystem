@@ -15,7 +15,7 @@ import * as dbf from '../services/databasefunctions';
 
 chai.use(chaiAsPromised);
 
-describe('Auth', function () {
+describe('Auth', function() {
   const CorrectUser = {
     username: 'endremau',
     passhash: '$2b$10$UetzqiczYlveWG0az9YnueGXzNWpsOJOi6Fczt8Uly4ZnWQkOk4xq',

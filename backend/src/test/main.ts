@@ -13,7 +13,7 @@ import * as db from '../utils/database';
 
 chai.use(chaiAsPromised);
 
-describe('Validators', function () {
+describe('Validators', function() {
   let hasConnection: sinon.SinonStub;
   let isPool: sinon.SinonStub;
   this.beforeAll(() => {
