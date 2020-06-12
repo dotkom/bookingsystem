@@ -15,7 +15,7 @@ export const validEmail = (email: string): boolean => {
 export const validateSQLStatement = async (sqlKeyword: string, sqlStatement: string): Promise<never | void> => {
   const isValidSqlStatement = sqlStatement.toLowerCase().includes(sqlKeyword);
   if (!isValidSqlStatement) {
-    throw new ErrorHandler(400, { status: 'Invalid SQL statment' });
+    throw new ErrorHandler(500, { status: 'Invalid SQL statment' });
   }
 };
 
@@ -47,13 +47,17 @@ export const isLocalAuthenticated = async (
   try {
     if (req.user) {
       const user = req.user as User;
-      if (user.role == localRole) {
-        next();
+      if (user.role !== undefined) {
+        if (user.role == localRole) {
+          next();
+        } else {
+          throw new ErrorHandler(400, { status: 'User not correct role' });
+        }
       } else {
-        throw new ErrorHandler(400, { status: 'User not correct role' });
+        throw new ErrorHandler(400, { status: 'User not logged into service' });
       }
     } else {
-      throw new ErrorHandler(400, { status: 'User not logged into service' });
+      throw new ErrorHandler(500, { status: 'Passport Middleware not present' });
     }
   } catch (e) {
     next(e);
@@ -68,13 +72,17 @@ export const isOWAuthenticated = async (
   try {
     if (req.user) {
       const user = req.user as User;
-      if (user.role == OWRole) {
-        next();
+      if (user.role !== undefined) {
+        if (user.role == OWRole) {
+          next();
+        } else {
+          throw new ErrorHandler(400, { status: 'User not correct role' });
+        }
       } else {
-        throw new ErrorHandler(400, { status: 'User not correct role' });
+        throw new ErrorHandler(400, { status: 'User not logged into service' });
       }
     } else {
-      throw new ErrorHandler(400, { status: 'User not logged into service' });
+      throw new ErrorHandler(500, { status: 'Passport Middleware not present' });
     }
   } catch (e) {
     next(e);

@@ -1,4 +1,4 @@
-import { PoolClient, QueryResultRow, Pool, Client } from 'pg';
+import { PoolClient, QueryResultRow, Pool, Client, ClientBase } from 'pg';
 import { ErrorHandler } from '../services/error';
 import { errorCodes } from './databaseErrorCode';
 export interface PgError extends Error {
@@ -27,10 +27,10 @@ export const foundData = async (payload: QueryResultRow): Promise<boolean> => {
   return payload.rows.length !== 0 ? true : false;
 };
 export const isPool = (connection: Pool | Client | PoolClient): connection is Pool => {
-  return (connection as Pool).connect !== undefined;
+  return connection instanceof Pool;
 };
 export const isClient = (connection: Pool | Client | PoolClient): connection is Client => {
-  return (connection as Client).end !== undefined;
+  return connection instanceof Client;
 };
 export const isPoolClient = (connection: Pool | Client | PoolClient): connection is PoolClient => {
   return (connection as PoolClient).release !== undefined;

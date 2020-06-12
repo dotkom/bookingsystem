@@ -62,7 +62,7 @@ const getOWStrategy = async (): Promise<OIDCStrategy<OWUser, Client>> => {
   return new OIDCStrategy(config, verify);
 };
 
-const authenticateLocalUser = async (username: string, password: string, done: Function): Promise<void> => {
+export const authenticateLocalUser = async (username: string, password: string, done: Function): Promise<void> => {
   try {
     logger.debug('Authenticating Local User');
     const query: Query = {

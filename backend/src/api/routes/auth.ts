@@ -6,17 +6,29 @@ import { getAdminPoolClient, executeQuery } from '../../services/databasefunctio
 import { OWUser } from '../../utils';
 const app: express.Application = express();
 
-app.get('/ow/login', (req: express.Request, res: express.Response, next: NextFunction) => {
+export const owLogin = async (
+  req: express.Request,
+  res: express.Response,
+  next: NextFunction,
+): Promise<void | never> => {
   const returnToPath = req.query.returnToPath || '/';
   if (req.session) {
     req.session.returnTo = returnToPath;
     passport.authenticate('oidc')(req, res, next);
   } else {
-    next(new ErrorHandler(500, { status: 'Sessions not activate on server' }));
+    throw new ErrorHandler(500, { status: 'Sessions not activate on server' });
+  }
+};
+
+app.get('/ow/login', async (req: express.Request, res: express.Response, next: NextFunction) => {
+  try {
+    await owLogin(req, res, next);
+  } catch (e) {
+    next(e);
   }
 });
 
-app.get('/callback', async (req, res, next) => {
+export const callback = (req: express.Request, res: express.Response, next: NextFunction) => {
   return passport.authenticate(
     'oidc',
     async (error, user, info): Promise<void> => {
@@ -58,7 +70,11 @@ app.get('/callback', async (req, res, next) => {
       }
       return;
     },
-  )(req, res, next);
+  );
+};
+
+app.get('/callback', async (req, res, next) => {
+  return callback(req, res, next)(req, res, next);
 });
 
 app.post('/local/login', (req: express.Request, res: express.Response, next: NextFunction): void => {

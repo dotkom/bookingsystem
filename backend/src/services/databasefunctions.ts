@@ -1,4 +1,4 @@
-import { PoolConfig, QueryResultRow, Pool, PoolClient, Client } from 'pg';
+import { PoolConfig, QueryResultRow, Pool, PoolClient, Client, QueryResult } from 'pg';
 import { ErrorHandler } from './error';
 import { envConfig } from '../config';
 import { isClient, isPoolClient, isPool, parsePgError, PgError, Query, validateSQLStatement } from '../utils';
@@ -14,15 +14,19 @@ const pgconfig: PoolConfig = {
 };
 const pool = new Pool(pgconfig);
 
-const hasConnection = async (): Promise<never | void> => {
+export const poolClientHelper = async (pool: Pool): Promise<PoolClient> => {
+  return await pool.connect();
+};
+
+export const hasConnection = async (): Promise<never | void> => {
   try {
-    await (await pool.connect()).query('SELECT NOW()');
+    await (await poolClientHelper(pool)).query('SELECT NOW()');
   } catch (e) {
     await parsePgError(e);
   }
 };
 
-const disconnectClient = async (client: PoolClient | Client): Promise<boolean | void> => {
+export const disconnectClient = async (client: PoolClient | Client): Promise<boolean | void> => {
   if (isPoolClient(client)) {
     client.release();
     return true;
@@ -245,12 +249,13 @@ export const getClient = async (connection: Client): Promise<Client> => {
 export const getPoolClient = async (connection: Pool): Promise<PoolClient | never> => {
   await hasConnection();
   if (isPool(connection)) {
-    const client: PoolClient = await connection.connect();
+    const client: PoolClient = await poolClientHelper(connection);
     return client;
   } else {
     throw new ErrorHandler(400, { status: 'Database Error' });
   }
 };
+
 export const getAdminPoolClient = async (): Promise<PoolClient> => {
   const pool = await genereateAdminConnection();
   return await getPoolClient(pool);
@@ -258,18 +263,4 @@ export const getAdminPoolClient = async (): Promise<PoolClient> => {
 export const getUserPoolClient = async (user: string, password: string): Promise<PoolClient> => {
   const pool = (await generatePoolConnection(user, password)) as Pool;
   return await getPoolClient(pool);
-};
-export const createRole = async (
-  sqlStatement: string,
-  data: string[] = [],
-  secret = false,
-): Promise<QueryResultRow | never> => {
-  const sqlKeyword = 'create role';
-  try {
-    await validateSQLStatement(sqlKeyword, sqlStatement);
-    const client = await getPoolClient(pool);
-    return executeQuery(sqlStatement, client, secret, data) as QueryResultRow;
-  } catch (err) {
-    throw err;
-  }
 };

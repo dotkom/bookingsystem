@@ -2,7 +2,7 @@
 **/001_datadump.**
 **/build
 **/logs
-
+**/.nyc_output
 **/.DS_Store
 
 **/node_modules
